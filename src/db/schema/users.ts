@@ -7,7 +7,8 @@ import {
   varchar,
   pgEnum,
   date,
-  primaryKey
+  primaryKey,
+  uuid
 } from "drizzle-orm/pg-core"
 import { AdapterAccountType } from "next-auth/adapters"
 import { sql } from "drizzle-orm"
@@ -23,7 +24,7 @@ export const roleEnum = pgEnum('roles', [
 ])
 
 export const users = pgTable("users", {
-  id: text("id")
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
@@ -37,7 +38,7 @@ export const users = pgTable("users", {
 export const accounts = pgTable(
   "account",
   {
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccountType>().notNull(),
@@ -60,7 +61,7 @@ export const accounts = pgTable(
  
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
@@ -84,7 +85,7 @@ export const authenticators = pgTable(
   "authenticator",
   {
     credentialID: text("credential_id").notNull().unique(),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     providerAccountId: text("provider_account_id").notNull(),
