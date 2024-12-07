@@ -5,8 +5,11 @@ This is a learning application to use efficently nextjs and implement new featur
 
 ## Getting Started
 
+First Install nodejs, yarn and docker
+
 First, run the development server:
 
 ```bash
+docker compose up -d
 yarn dev
 ```
