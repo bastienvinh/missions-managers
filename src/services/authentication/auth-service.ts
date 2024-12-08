@@ -2,7 +2,8 @@ import { RoleEnum } from "./type";
 import { logger } from "@/lib/logger";
 import { generateSalt, hashPassword } from "./crypt";
 import { AddUser, User } from "@/types/user-types";
-import { createUserService, getUserEmailService } from "../user-service";
+import { createUserService, getUserEmailService, getUserService, updateUserService } from "../user-service";
+import _ from "lodash";
 
 export async function getAuthUser() {
   // TODO: finish it
@@ -29,6 +30,35 @@ export async function signUp(email: string, password: string, name: string, role
 
   const [userCreated] = await createUserService(newUser)
   return { email: userCreated.email, role: userCreated.role }
+}
+
+export async function modifyUser(id: string, email: string, password: string, name: string, role: RoleEnum) {
+  const user = await getUserService(id)
+
+  if (!user) {
+    logger.error(`User doesn't exist : ${id}`)
+    throw new Error('User doesn\'t exists')
+  }
+
+  const hashedPassword = await hashPassword(password, user.salt)
+
+  // Don't change password if the password is empty
+  try {
+    await updateUserService({
+      id,
+      email,
+      password: _.isEmpty(password) ? user.password : hashedPassword,
+      name,
+      role,
+      salt: user.salt,
+      updatedAt: new Date().toISOString()
+    })
+  } catch {
+    logger.error(`Impossible to modify informations: ${id} : ${email}`)
+    throw new Error('Impossible to modify user')
+  }
+
+  logger.info(`Change User informations : ${id}: ${email}`)
 }
 
 export const roleHierarchy = [

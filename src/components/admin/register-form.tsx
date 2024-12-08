@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
 import {toast} from 'sonner'
 
-import { SignupFormSchema, SignupFormSchemaType } from "@/services/validation/admin/register-form";
+import { SignupFormSchema, SignupFormSchemaType, UpdateUserFormSchema } from "@/services/validation/admin/register-form";
 
 
 export default function RegisterForm({ className, user }: { className: string, user?: UserDao }) {
@@ -31,7 +31,7 @@ export default function RegisterForm({ className, user }: { className: string, u
     reset,
     formState: { errors },
   } = useForm<SignupFormSchemaType>({
-    resolver: zodResolver(SignupFormSchema),
+    resolver: zodResolver(user ? UpdateUserFormSchema : SignupFormSchema),
     defaultValues: {
       id: user?.id,
       confirmPassword: '',
@@ -43,11 +43,11 @@ export default function RegisterForm({ className, user }: { className: string, u
   })
 
   useEffect(() => {
-    if (actionState?.success) {
+    if (!isPending && actionState?.success) {
       toast.success(user ? 'Success Modified User' : 'Succes Added User')
-      reset()
+      if (!user) reset();
     }
-  }, [actionState])
+  }, [isPending, actionState])
 
 
   function onSubmitHandler(data: SignupFormSchemaType) {
@@ -90,6 +90,7 @@ export default function RegisterForm({ className, user }: { className: string, u
               className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.name || errors.name, 'border-red-500': actionState?.errors?.name || errors.name  })}
             />
             {actionState?.errors?.name && <p className="text-red-500 text-sm">{actionState.errors.name}</p>}
+            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2 mb-3">
@@ -101,26 +102,29 @@ export default function RegisterForm({ className, user }: { className: string, u
               className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.email || errors.email, 'border-red-500': actionState?.errors?.email || errors.email })}
             />
             {actionState?.errors?.email && <p className="text-red-500 text-sm">{actionState.errors.email}</p>}
+            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2 mb-3">
             <Label htmlFor="password">Password</Label>
             <Input
-              {  ...register('password', { required: !!user }) }
+              {  ...register('password', { required: !user }) }
               type="password"
               className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.password || errors.password,'border-red-500': actionState?.errors?.password || errors.password })}
             />
             {actionState?.errors?.password && <p className="text-red-500 text-sm">{actionState.errors.password}</p>}
+            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
 
           <div className="space-y-2 mb-3">
             <Label htmlFor="verifyPassword">Verify Password</Label>
             <Input
-              {  ...register('confirmPassword', { required: !!user }) }
+              {  ...register('confirmPassword', { required: !user }) }
               type="password"
               className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.confirmPassword || errors.confirmPassword, 'border-red-500': actionState?.errors?.confirmPassword || errors.confirmPassword })}
             />
             {actionState?.errors?.confirmPassword && <p className="text-red-500 text-sm">{actionState.errors.confirmPassword}</p>}
+            {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -143,7 +147,7 @@ export default function RegisterForm({ className, user }: { className: string, u
         <CardFooter>
           <div className="w-full flex justify-between">
             <div>
-              {user ? <Button variant="destructive">Delete Forever</Button> : null}
+              {user ? <Button type="button" variant="destructive">Delete Forever</Button> : null}
             </div>
             <div className="justify-self-end flex gap-3">
               <Button variant="secondary" type="button" onClick={onResetHandler}>Reset</Button>

@@ -1,10 +1,10 @@
 'use server'
 
 import { logger } from "@/lib/logger"
-import { signUp } from "@/services/authentication/auth-service"
+import { modifyUser, signUp } from "@/services/authentication/auth-service"
 import { RoleEnum } from "@/services/authentication/type"
 import { getUserService } from "@/services/user-service"
-import { SignupFormSchema } from "@/services/validation/admin/register-form"
+import { SignupFormSchema, UpdateUserFormSchema } from "@/services/validation/admin/register-form"
 import { isRedirectError } from "next/dist/client/components/redirect"
 
 export type FormState = {
@@ -61,7 +61,6 @@ export async function register(
     }
     logger.error('Register Error : ', error)
     return { success: false, message: `Something went wrong. ${error}`}
-    // throw error
   }
 
   return { success: true, message: 'Success' }
@@ -83,9 +82,30 @@ export async function updateUser(
   const name = formData.get('name') as string
   const role = formData.get('role') as RoleEnum
 
-  const user = await getUserService(id)
+  const parsedFields = UpdateUserFormSchema.safeParse({
+    email,
+    name,
+    password,
+    confirmPassword,
+    role
+  })
 
-  console.log(user)
+  logger.info('Tentative to modify an user')
 
-  return { success: false }
+  if (!parsedFields.success) {
+    logger.error(`failed to modify and user, invalid field: ${JSON.stringify({email, name, password, confirmPassword, role})}`)
+    return {
+      success: false,
+      errors: parsedFields.error.flatten().fieldErrors,
+      message: 'Invalid fields'
+    }
+  }
+
+  try {
+    await modifyUser(id, email, password, name, role)
+  } catch (error) {
+    return { success: false, message: `Error: ${error}` }
+  }
+
+  return { success: true, message: 'Successfull' }
 }

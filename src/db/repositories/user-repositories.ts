@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import db from "../schema";
 import { UserAddModel, users } from "../schema/users";
 
@@ -20,4 +21,13 @@ export async function getUserDao(id: string) {
   } catch {
     return undefined
   }
+}
+
+export async function updateUserDao(user: UserAddModel) {
+
+  if (!user.id) {
+    throw new Error('Update => user.id is not filled')
+  }
+
+  await db.update(users).set(user).where(eq(users.id, user.id))
 }

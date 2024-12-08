@@ -1,4 +1,5 @@
 import * as userRepository from '@/db/repositories/user-repositories'
+import { UserAddModel } from '@/db/schema/users';
 import { AddUser } from "@/types/user-types";
 
 export async function createUserService(data: AddUser) {
@@ -15,4 +16,8 @@ export async function getUserService(userId: string) {
 
 export async function getUserEmailService(email: string) {
   return userRepository.getUserByEmailDao(email)
+}
+
+export async function updateUserService(user: UserAddModel) {
+  await userRepository.updateUserDao(user)
 }
