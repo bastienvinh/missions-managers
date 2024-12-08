@@ -1,25 +1,75 @@
 'use client'
 
-import { register, updateUser } from "@/app/admin/register/action";
+import { register as registerFormAction, updateUser } from "@/app/admin/register/action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleEnum } from "@/services/authentication/type";
 import { Label } from "@radix-ui/react-label";
 import clsx from "clsx";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef, useTransition } from "react";
 import { Alert, AlertDescription } from "../ui/alert";
 import _ from  'lodash'
 import { UserDao } from "@/app/dal/user-dal";
 import { useFormStatus } from "react-dom";
+import { useForm } from "react-hook-form";
+import {zodResolver} from '@hookform/resolvers/zod'
+import {toast} from 'sonner'
+
+import { SignupFormSchema, SignupFormSchemaType } from "@/services/validation/admin/register-form";
 
 
 export default function RegisterForm({ className, user }: { className: string, user?: UserDao }) {
-  const [actionState, registerAction] = useActionState(user ? updateUser : register, { success: false })
+  const [actionState, registerAction] = useActionState(user ? updateUser : registerFormAction, { success: false })
+
+  const [isPending, startTransition] = useTransition()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<SignupFormSchemaType>({
+    resolver: zodResolver(SignupFormSchema),
+    defaultValues: {
+      id: user?.id,
+      confirmPassword: '',
+      password: '',
+      email: user?.email ?? '',
+      name: user?.name ?? '',
+      role: (user?.role ?? RoleEnum.GUEST) as RoleEnum
+    }
+  })
+
+  useEffect(() => {
+    if (actionState?.success) {
+      toast.success(user ? 'Success Modified User' : 'Succes Added User')
+      reset()
+    }
+  }, [actionState])
+
+
+  function onSubmitHandler(data: SignupFormSchemaType) {
+    const formData = new FormData()
+    if (data.id) formData.set('id', data.id);
+    formData.set('password', data.password)
+    formData.set('confirmPassword', data.confirmPassword)
+    formData.set('email', data.email)
+    formData.set('name', data.name)
+    formData.set('role', data.role)
+
+    startTransition(() => registerAction(formData))
+  }
+
+  function onResetHandler() {
+    startTransition(() => registerAction(null))
+    // TODO: Manage the isPending when the transition is not finished
+    reset()
+  }
 
   return (
-    <form noValidate className={className} action={registerAction}>
+    <form className={className} onSubmit={handleSubmit(onSubmitHandler)}>
       {user && <input type="hidden" name="id" value={user.id} />}
       <Card>
         <CardHeader>
@@ -35,11 +85,9 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="name">Name</Label>
             <Input
-              required
-              id="name"
-              name="name"
+              {...register('name', { required: true })}
               defaultValue={user?.name ?? ''}
-              className={clsx({ 'text-red-500': actionState?.errors?.name })}
+              className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.name || errors.name, 'border-red-500': actionState?.errors?.name || errors.name  })}
             />
             {actionState?.errors?.name && <p className="text-red-500 text-sm">{actionState.errors.name}</p>}
           </div>
@@ -47,12 +95,10 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="email">Email</Label>
             <Input
-              required
-              id="email"
-              name="email"
+              { ...register('email', { required: true }) }
               type="email"
               defaultValue={user?.email ?? ''}
-              className={clsx({ 'text-red-500': actionState?.errors?.email })}
+              className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.email || errors.email, 'border-red-500': actionState?.errors?.email || errors.email })}
             />
             {actionState?.errors?.email && <p className="text-red-500 text-sm">{actionState.errors.email}</p>}
           </div>
@@ -60,11 +106,9 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="password">Password</Label>
             <Input
-              required={!!user}
-              id="password"
-              name="password"
+              {  ...register('password', { required: !!user }) }
               type="password"
-              className={clsx({ 'text-red-500': actionState?.errors?.password })}
+              className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.password || errors.password,'border-red-500': actionState?.errors?.password || errors.password })}
             />
             {actionState?.errors?.password && <p className="text-red-500 text-sm">{actionState.errors.password}</p>}
           </div>
@@ -72,18 +116,16 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="verifyPassword">Verify Password</Label>
             <Input
-              required={!!user}
-              id="confirmPassword"
-              name="confirmPassword"
+              {  ...register('confirmPassword', { required: !!user }) }
               type="password"
-              className={clsx({ 'text-red-500': actionState?.errors?.confirmPassword })}
+              className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.confirmPassword || errors.confirmPassword, 'border-red-500': actionState?.errors?.confirmPassword || errors.confirmPassword })}
             />
             {actionState?.errors?.confirmPassword && <p className="text-red-500 text-sm">{actionState.errors.confirmPassword}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select required name="role" defaultValue={user?.role ?? RoleEnum.ADMIN}>
+            <Select { ...register('role', { required: true }) } defaultValue={user?.role ?? RoleEnum.ADMIN}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
@@ -103,9 +145,9 @@ export default function RegisterForm({ className, user }: { className: string, u
             <div>
               {user ? <Button variant="destructive">Delete Forever</Button> : null}
             </div>
-            <div className="justify-self-end">
-              <Button type="button" variant="secondary" className="mr-3">Cancel</Button>
-              <AddButton />
+            <div className="justify-self-end flex gap-3">
+              <Button variant="secondary" type="button" onClick={onResetHandler}>Reset</Button>
+              <AddUpdateButton hasUser={!!user} />
             </div>
           </div>
         </CardFooter>
@@ -114,10 +156,10 @@ export default function RegisterForm({ className, user }: { className: string, u
   )
 }
 
-function AddButton() {
+function AddUpdateButton({ hasUser }: { hasUser: boolean }) {
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending} variant="outline">Add</Button>
+    <Button type="submit" disabled={pending} variant="outline">{hasUser ? 'Modify' : 'Add'}</Button>
   )
 }

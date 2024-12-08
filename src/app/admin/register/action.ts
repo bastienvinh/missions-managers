@@ -21,8 +21,13 @@ export type FormState = {
 
 export async function register(
   _currentState: FormState,
-  formData: FormData
+  formData: FormData | null
 ) : Promise<FormState> {
+
+  if (formData === null) {
+    return
+  }
+
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const confirmPassword = formData.get('confirmPassword') as string
@@ -64,8 +69,12 @@ export async function register(
 
 export async function updateUser(
   _currentState: FormState,
-  formData: FormData
+  formData: FormData | null
 ): Promise<FormState> {
+
+  if (formData === null) {
+    return
+  }
 
   const id = formData.get('id') as string
   const email = formData.get('email') as string

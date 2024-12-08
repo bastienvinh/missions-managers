@@ -3,6 +3,7 @@ import { z } from "zod"
 
 export const SignupFormSchema = z
   .object({
+    id: z.string().optional(),
     email: z.string().email({message: 'Please enter a valid email.'}).trim(),
     name: z.string().min(4, {message: 'Be at least 4 characters long'}),
     password: z
@@ -23,3 +24,5 @@ export const SignupFormSchema = z
       path: ['confirmPassword'],
     }
   )
+
+export type SignupFormSchemaType = z.infer<typeof SignupFormSchema>
