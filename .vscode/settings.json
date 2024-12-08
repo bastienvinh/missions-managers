@@ -1,5 +1,28 @@
 {
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "node_modules": true
+  },
   "oxc.enable": false,
   "eslint.enable": true,
-  "eslint.codeActionsOnSave.mode": "problems"
+  "eslint.codeActionsOnSave.mode": "problems",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "yarn.lock, next.config.ts, postcss.config.js, README.md, tailwind.config.js, tsconfig.json, .eslintignore, .gitignore, .eslintrc.js, nest-cli.json, docker-compose.yml, postcss.config.mjs, tailwind.config.ts, eslint.config.mjs, drizzle.config.ts, next-env.d.ts",
+    "*.tsx": "${basename}.module.css, ${basename}.test.tsx, ${basename}.spec.tsx"
+  },
+  "npm.packageManager": "yarn",
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#004182",      // Deep Navy Blue for trust and professionalism
+    "statusBar.foreground": "#FFFFFF",      // Crisp White for high readability
+    "titleBar.activeBackground": "#002D59", // Rich Dark Blue for a strong and authoritative feel
+    "titleBar.activeForeground": "#E0E0E0", // Soft Light Gray for elegant text contrast
+    "titleBar.inactiveBackground": "#1B3A5F", // Muted Blue-Grey for contrast
+    "titleBar.inactiveForeground": "#B0BEC5"  // Subtle Cool Gray for subdued text
+  }
 }
