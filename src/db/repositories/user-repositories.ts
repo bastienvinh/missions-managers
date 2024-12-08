@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
-import db from "../schema";
-import { UserAddModel, users } from "../schema/users";
+import { eq } from "drizzle-orm"
+import db from "../schema"
+import { UserAddModel, users } from "../schema/users"
 
 export function getUserByEmailDao(email: string) {
   return db.query.users.findFirst({

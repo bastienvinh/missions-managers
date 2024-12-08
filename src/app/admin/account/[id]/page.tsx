@@ -1,9 +1,9 @@
-import { getUserDal } from "@/app/dal/user-dal";
+import { getUserDal } from "@/app/dal/user-dal"
 import RegisterForm from "@/components/admin/register-form"
-import { notFound } from "next/navigation";
+import { notFound } from "next/navigation"
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const allParams = await params;
+  const allParams = await params
   const user = await getUserDal(allParams.id)
 
   if (!user) {

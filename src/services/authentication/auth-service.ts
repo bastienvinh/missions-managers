@@ -1,9 +1,11 @@
-import { RoleEnum } from "./type";
-import { logger } from "@/lib/logger";
-import { generateSalt, hashPassword } from "./crypt";
-import { AddUser, User } from "@/types/user-types";
-import { createUserService, getUserEmailService, getUserService, updateUserService } from "../user-service";
-import _ from "lodash";
+'use server'
+
+import { RoleEnum } from "./type"
+import { logger } from "@/lib/logger"
+import { generateSalt, hashPassword } from "./crypt"
+import { AddUser, User } from "@/types/user-types"
+import { createUserService, getUserEmailService, getUserService, updateUserService } from "../user-service"
+import _ from "lodash"
 
 export async function getAuthUser() {
   // TODO: finish it
@@ -61,6 +63,16 @@ export async function modifyUser(id: string, email: string, password: string, na
   logger.info(`Change User informations : ${id}: ${email}`)
 }
 
+export async function signIn(email: string, password: string) {
+  const user = await getUserEmailService(email)
+  if (!user) {
+    logger.error(`Login tentative: ${email} => user doesn't exist`)
+    throw new Error(`User doesn't exists`)
+  }
+
+  
+}
+
 export const roleHierarchy = [
   RoleEnum.GUEST,
   RoleEnum.REDACTOR,
@@ -68,7 +80,7 @@ export const roleHierarchy = [
   RoleEnum.SUPER_ADMIN
 ]
 
-export function hasRequiredRole(
+export async function hasRequiredRole(
   userConnected?: User,
   requestedRole?: RoleEnum
 ) {

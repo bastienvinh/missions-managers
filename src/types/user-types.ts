@@ -1,4 +1,4 @@
-import { UserAddModel, UserModel } from "@/db/schema/users";
+import { UserAddModel, UserModel } from "@/db/schema/users"
 
 
 export type User = UserModel

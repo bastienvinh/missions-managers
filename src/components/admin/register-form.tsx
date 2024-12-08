@@ -1,23 +1,23 @@
 'use client'
 
-import { register as registerFormAction, updateUser } from "@/app/admin/register/action";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RoleEnum } from "@/services/authentication/type";
-import { Label } from "@radix-ui/react-label";
-import clsx from "clsx";
-import { useActionState, useEffect, useRef, useTransition } from "react";
-import { Alert, AlertDescription } from "../ui/alert";
+import { register as registerFormAction, updateUser } from "@/app/admin/register/action"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { RoleEnum } from "@/services/authentication/type"
+import { Label } from "@radix-ui/react-label"
+import clsx from "clsx"
+import { useActionState, useEffect, useRef, useTransition } from "react"
+import { Alert, AlertDescription } from "../ui/alert"
 import _ from  'lodash'
-import { UserDao } from "@/app/dal/user-dal";
-import { useFormStatus } from "react-dom";
-import { useForm } from "react-hook-form";
+import { UserDao } from "@/app/dal/user-dal"
+import { useFormStatus } from "react-dom"
+import { useForm } from "react-hook-form"
 import {zodResolver} from '@hookform/resolvers/zod'
 import {toast} from 'sonner'
 
-import { SignupFormSchema, SignupFormSchemaType, UpdateUserFormSchema } from "@/services/validation/admin/register-form";
+import { SignupFormSchema, SignupFormSchemaType, UpdateUserFormSchema } from "@/services/validation/admin/register-form"
 
 
 export default function RegisterForm({ className, user }: { className: string, user?: UserDao }) {
@@ -45,14 +45,14 @@ export default function RegisterForm({ className, user }: { className: string, u
   useEffect(() => {
     if (!isPending && actionState?.success) {
       toast.success(user ? 'Success Modified User' : 'Succes Added User')
-      if (!user) reset();
+      if (!user) reset()
     }
   }, [isPending, actionState])
 
 
   function onSubmitHandler(data: SignupFormSchemaType) {
     const formData = new FormData()
-    if (data.id) formData.set('id', data.id);
+    if (data.id) formData.set('id', data.id)
     formData.set('password', data.password)
     formData.set('confirmPassword', data.confirmPassword)
     formData.set('email', data.email)

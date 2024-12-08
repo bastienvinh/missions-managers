@@ -74,6 +74,7 @@ const config = [
       // 'promise/avoid-new': 'off',
       'react/prop-types': 'off',
       'i18n-text/no-en': 'off',
+      'semi': ['error', 'never'],
       // 'github/no-implicit-buggy-globals': 'off',
 
       // 'eslint-comments/no-use': [

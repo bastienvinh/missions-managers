@@ -1,8 +1,8 @@
 import {relations, sql} from 'drizzle-orm'
 import { boolean, doublePrecision, integer, pgEnum, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
-import { users } from './users';
+import { users } from './users'
 
-export const contractTypes = pgEnum("contract_types", ["Fulltime", "Permanent", "Temporary", "PartTime", "Others"]);
+export const contractTypes = pgEnum("contract_types", ["Fulltime", "Permanent", "Temporary", "PartTime", "Others"])
 
 export const missions = pgTable('mission', {
   id:  uuid('id')
