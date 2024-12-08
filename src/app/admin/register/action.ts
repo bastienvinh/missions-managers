@@ -46,3 +46,11 @@ export async function register(
 
   return { success: true, message: 'Success' }
 }
+
+export async function updateUser(
+  _currentState: FormState,
+  formData: FormData
+): Promise<FormState> {
+
+  return { success: false }
+}

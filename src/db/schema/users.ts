@@ -99,3 +99,14 @@ export const authenticators = pgTable(
     }),
   })
 )
+
+export type UserModel = typeof users.$inferSelect
+export type UserAddModel = typeof users.$inferInsert
+export type DeleteUserModel = Pick<UserModel, 'id'>
+
+export type SessionModel = typeof sessions.$inferSelect
+export type SessionAddModel = typeof sessions.$inferInsert
+
+export type AccountModel = typeof accounts.$inferSelect
+export type AccountAddModel = typeof accounts.$inferInsert
+export type CreateUser = Omit<UserAddModel, 'id'>

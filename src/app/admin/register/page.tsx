@@ -1,6 +1,5 @@
 import RegisterForm from "@/components/admin/register-form";
 
-
 export default function Page() {
 
   return (
