@@ -14,11 +14,8 @@ import { AdapterAccountType } from "next-auth/adapters"
 import { sql } from "drizzle-orm"
 
 export const roleEnum = pgEnum('roles', [
-  'USER',
   'GUEST',
   'REDACTOR',
-  'MODERATOR',
-  'MANAGER',
   'ADMIN',
   'SUPER_ADMIN',
 ])
