@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RoleEnum } from "@/services/authentication/type";
 import { Label } from "@radix-ui/react-label";
 
 export default function Page() {
@@ -47,24 +49,32 @@ export default function Page() {
             />
           </div>
 
-          {/* <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select onValueChange={handleRoleChange}>
-              <SelectTrigger className={errors.role ? 'border-red-500' : ''}>
+            <Select value={RoleEnum.ADMIN}>
+              <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="user">User</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="moderator">Moderator</SelectItem>
+                <SelectGroup>
+                  <SelectItem value={RoleEnum.ADMIN}>Administrator</SelectItem>
+                  <SelectItem value={RoleEnum.GUEST}>Guest</SelectItem>
+                  <SelectItem value={RoleEnum.REDACTOR}>Redactor</SelectItem>
+                </SelectGroup>
               </SelectContent>
             </Select>
-            {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
-          </div> */}
+            
+          </div>
         </CardContent>
         <CardFooter>
-          <div className="w-full">
-            <Button>Add</Button>
+          <div className="w-full flex justify-between">
+            <div>
+              <Button variant="destructive">Delete Forever</Button>
+            </div>
+            <div className="justify-self-end">
+              <Button variant="secondary" className="mr-3">Cancel</Button>
+              <Button variant="outline">Add</Button>
+            </div>
           </div>
         </CardFooter>
       </Card>
