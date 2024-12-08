@@ -27,6 +27,7 @@ export const users = pgTable("users", {
   name: text("name"),
   email: text("email").unique(),
   password: varchar("password").notNull(),
+  salt: varchar("salt").notNull(),
   role: roleEnum('role').notNull(),
   createdAt: date('createdat').default(sql`now()`),
   updatedAt: date('updatedat'),

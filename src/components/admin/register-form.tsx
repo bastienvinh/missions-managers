@@ -10,6 +10,8 @@ import { User } from "@/types/user-types";
 import { Label } from "@radix-ui/react-label";
 import clsx from "clsx";
 import { useActionState } from "react";
+import { Alert, AlertDescription } from "../ui/alert";
+import _ from  'lodash'
 
 
 export default function RegisterForm({ className, user }: { className: string, user?: User }) {
@@ -20,10 +22,15 @@ export default function RegisterForm({ className, user }: { className: string, u
       {user && <input type="hidden" name="id" value={user.id} />}
       <Card>
         <CardHeader>
-          <CardTitle>Register an user</CardTitle>
-          <CardDescription>Can add/remove a new user</CardDescription>
+          <CardTitle>{user ? 'Modify' : 'Register' } an user</CardTitle>
+          <CardDescription>{user ? 'Modify a new user' : 'Can a new user'}</CardDescription>
         </CardHeader>
         <CardContent>
+            {(!actionState?.success && !_.isEmpty(actionState?.message)) && (
+              <Alert className="mb-4 h-3 flex justify-center items-center" variant="destructive">
+                <AlertDescription className="flex justify-center items-center">Registration Failed: {actionState?.message} - Please try again</AlertDescription>
+              </Alert>
+            )}
           <div className="space-y-2 mb-3">
             <Label htmlFor="name">Name</Label>
             <Input
@@ -71,7 +78,7 @@ export default function RegisterForm({ className, user }: { className: string, u
 
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select name="role" defaultValue={user?.role ?? RoleEnum.ADMIN} onValueChange={value => setRole(value as RoleEnum)}>
+            <Select name="role" defaultValue={user?.role ?? RoleEnum.ADMIN}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
@@ -89,7 +96,7 @@ export default function RegisterForm({ className, user }: { className: string, u
         <CardFooter>
           <div className="w-full flex justify-between">
             <div>
-              <Button variant="destructive">Delete Forever</Button>
+              {user ? <Button variant="destructive">Delete Forever</Button> : null}
             </div>
             <div className="justify-self-end">
               <Button variant="secondary" className="mr-3">Cancel</Button>

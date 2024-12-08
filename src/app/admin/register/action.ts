@@ -1,7 +1,10 @@
 'use server'
 
 import { logger } from "@/lib/logger"
+import { signUp } from "@/services/authentication/auth-service"
+import { RoleEnum } from "@/services/authentication/type"
 import { SignupFormSchema } from "@/services/validation/admin/register-form"
+import { isRedirectError } from "next/dist/client/components/redirect"
 
 export type FormState = {
   success: boolean
@@ -20,10 +23,10 @@ export async function register(
   formData: FormData
 ) : Promise<FormState> {
   const email = formData.get('email') as string
-  const password = formData.get('password')
-  const confirmPassword = formData.get('confirmPassword')
-  const name = formData.get('name')
-  const role = formData.get('role')
+  const password = formData.get('password') as string
+  const confirmPassword = formData.get('confirmPassword') as string
+  const name = formData.get('name') as string
+  const role = formData.get('role') as RoleEnum
 
   const parsedFields = SignupFormSchema.safeParse({
     email,
@@ -42,6 +45,17 @@ export async function register(
       errors: parsedFields.error.flatten().fieldErrors,
       message: 'Invalid fields'
     }
+  }
+
+  try {
+    await signUp(email, password, name, role)
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error
+    }
+    logger.error('Register Error : ', error)
+    return { success: false, message: `Something went wrong. ${error}`}
+    // throw error
   }
 
   return { success: true, message: 'Success' }

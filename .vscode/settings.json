@@ -26,5 +26,8 @@
     "titleBar.activeForeground": "#E0E0E0", // Soft Light Gray for elegant text contrast
     "titleBar.inactiveBackground": "#1B3A5F", // Muted Blue-Grey for contrast
     "titleBar.inactiveForeground": "#B0BEC5"  // Subtle Cool Gray for subdued text
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
   }
 }
