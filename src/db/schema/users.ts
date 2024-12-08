@@ -30,6 +30,7 @@ export const users = pgTable("users", {
   role: roleEnum('role').notNull(),
   createdAt: date('createdat').default(sql`now()`),
   updatedAt: date('updatedat'),
+  deletedAt: date('deletedat')
 })
 
 export const accounts = pgTable(
