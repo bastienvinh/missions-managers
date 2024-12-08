@@ -3,6 +3,7 @@
 import { logger } from "@/lib/logger"
 import { signUp } from "@/services/authentication/auth-service"
 import { RoleEnum } from "@/services/authentication/type"
+import { getUserService } from "@/services/user-service"
 import { SignupFormSchema } from "@/services/validation/admin/register-form"
 import { isRedirectError } from "next/dist/client/components/redirect"
 
@@ -39,7 +40,7 @@ export async function register(
   logger.info('Tentative to register an user')
 
   if (!parsedFields.success) {
-    logger.error(`failed to register and user, invalid field: ${{email, name, password, confirmPassword, role}}`)
+    logger.error(`failed to register and user, invalid field: ${JSON.stringify({email, name, password, confirmPassword, role})}`)
     return {
       success: false,
       errors: parsedFields.error.flatten().fieldErrors,
@@ -65,6 +66,17 @@ export async function updateUser(
   _currentState: FormState,
   formData: FormData
 ): Promise<FormState> {
+
+  const id = formData.get('id') as string
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+  const confirmPassword = formData.get('confirmPassword') as string
+  const name = formData.get('name') as string
+  const role = formData.get('role') as RoleEnum
+
+  const user = await getUserService(id)
+
+  console.log(user)
 
   return { success: false }
 }

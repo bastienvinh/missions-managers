@@ -12,7 +12,12 @@ export async function createUserDao(newUser: UserAddModel) {
 }
 
 export async function getUserDao(id: string) {
-  return db.query.users.findFirst({
-    where: (user, {eq}) => eq(user.id, id)
-  })
+  try {
+    const user = await db.query.users.findFirst({
+      where: (user, {eq}) => eq(user.id, id)
+    })
+    return user
+  } catch {
+    return undefined
+  }
 }

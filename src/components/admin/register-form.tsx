@@ -6,15 +6,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleEnum } from "@/services/authentication/type";
-import { User } from "@/types/user-types";
 import { Label } from "@radix-ui/react-label";
 import clsx from "clsx";
 import { useActionState } from "react";
 import { Alert, AlertDescription } from "../ui/alert";
 import _ from  'lodash'
+import { UserDao } from "@/app/dal/user-dal";
+import { useFormStatus } from "react-dom";
 
 
-export default function RegisterForm({ className, user }: { className: string, user?: User }) {
+export default function RegisterForm({ className, user }: { className: string, user?: UserDao }) {
   const [actionState, registerAction] = useActionState(user ? updateUser : register, { success: false })
 
   return (
@@ -34,6 +35,7 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="name">Name</Label>
             <Input
+              required
               id="name"
               name="name"
               defaultValue={user?.name ?? ''}
@@ -45,6 +47,7 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="email">Email</Label>
             <Input
+              required
               id="email"
               name="email"
               type="email"
@@ -57,6 +60,7 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="password">Password</Label>
             <Input
+              required={!!user}
               id="password"
               name="password"
               type="password"
@@ -68,6 +72,7 @@ export default function RegisterForm({ className, user }: { className: string, u
           <div className="space-y-2 mb-3">
             <Label htmlFor="verifyPassword">Verify Password</Label>
             <Input
+              required={!!user}
               id="confirmPassword"
               name="confirmPassword"
               type="password"
@@ -78,7 +83,7 @@ export default function RegisterForm({ className, user }: { className: string, u
 
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select name="role" defaultValue={user?.role ?? RoleEnum.ADMIN}>
+            <Select required name="role" defaultValue={user?.role ?? RoleEnum.ADMIN}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
@@ -99,12 +104,20 @@ export default function RegisterForm({ className, user }: { className: string, u
               {user ? <Button variant="destructive">Delete Forever</Button> : null}
             </div>
             <div className="justify-self-end">
-              <Button variant="secondary" className="mr-3">Cancel</Button>
-              <Button variant="outline">Add</Button>
+              <Button type="button" variant="secondary" className="mr-3">Cancel</Button>
+              <AddButton />
             </div>
           </div>
         </CardFooter>
       </Card>
     </form>
+  )
+}
+
+function AddButton() {
+  const { pending } = useFormStatus()
+
+  return (
+    <Button type="submit" disabled={pending} variant="outline">Add</Button>
   )
 }
