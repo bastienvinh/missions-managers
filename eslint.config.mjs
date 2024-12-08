@@ -17,7 +17,7 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 })
 
-export default [
+const config = [
   {
     ignores: ['src/components/ui/*'],
   },
@@ -135,3 +135,6 @@ export default [
     },
   },
 ]
+
+
+export default config

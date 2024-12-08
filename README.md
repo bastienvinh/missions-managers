@@ -11,5 +11,14 @@ First, run the development server:
 
 ```bash
 docker compose up -d
+
+# Check your database fist and watch evrything is okay
+yarn db:check
+# Generate Drizzle Database script
+yarn db:generate
+# Generate your database
+yarn db:migrate
+
+# Start to test or code
 yarn dev
 ```
