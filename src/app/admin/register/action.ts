@@ -1,3 +1,6 @@
+'use server'
+
+import { logger } from "@/lib/logger"
 import { SignupFormSchema } from "@/services/validation/admin/register-form"
 
 export type FormState = {
@@ -30,7 +33,10 @@ export async function register(
     role
   })
 
+  logger.info('Tentative to register an user')
+
   if (!parsedFields.success) {
+    logger.error(`failed to register and user, invalid field: ${{email, name, password, confirmPassword, role}}`)
     return {
       success: false,
       errors: parsedFields.error.flatten().fieldErrors,
@@ -38,5 +44,5 @@ export async function register(
     }
   }
 
-  return { success: true, message: 'User modified' }
+  return { success: true, message: 'Success' }
 }
