@@ -1,11 +1,15 @@
-import { createUserDao, getUserByEmailDao } from "@/db/repositories/user-repositories";
 import { RoleEnum } from "./type";
 import { logger } from "@/lib/logger";
 import { generateSalt, hashPassword } from "./crypt";
 import { AddUser, User } from "@/types/user-types";
+import { createUserService, getUserEmailService } from "../user-service";
+
+export async function getAuthUser() {
+  // TODO: finish it
+}
 
 export async function signUp(email: string, password: string, name: string, role: RoleEnum) {
-  const user = await getUserByEmailDao(email)
+  const user = await getUserEmailService(email)
   if (user) {
     throw new Error('User already exists')
   }
@@ -23,7 +27,7 @@ export async function signUp(email: string, password: string, name: string, role
     role
   }
 
-  const [userCreated] = await createUserDao(newUser)
+  const [userCreated] = await createUserService(newUser)
   return { email: userCreated.email, role: userCreated.role }
 }
 

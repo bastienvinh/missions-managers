@@ -10,3 +10,9 @@ export function getUserByEmailDao(email: string) {
 export async function createUserDao(newUser: UserAddModel) {
   return db.insert(users).values(newUser).returning()
 }
+
+export async function getUserDao(id: string) {
+  return db.query.users.findFirst({
+    where: (user, {eq}) => eq(user.id, id)
+  })
+}

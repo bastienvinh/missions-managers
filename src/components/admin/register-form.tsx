@@ -23,7 +23,7 @@ export default function RegisterForm({ className, user }: { className: string, u
       <Card>
         <CardHeader>
           <CardTitle>{user ? 'Modify' : 'Register' } an user</CardTitle>
-          <CardDescription>{user ? 'Modify a new user' : 'Can a new user'}</CardDescription>
+          <CardDescription>{user ? 'Can modify a new user' : 'Can add a new user'}</CardDescription>
         </CardHeader>
         <CardContent>
             {(!actionState?.success && !_.isEmpty(actionState?.message)) && (
