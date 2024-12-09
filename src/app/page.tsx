@@ -1,11 +1,22 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { redirect } from "next/navigation"
+import { useEffect, useState } from "react"
 import { logout } from "./(auth)/login/action"
+import { getConnectedUser } from "./dal/user-dal"
 
 function Home() {
+
+  useEffect(() => {
+    getConnectedUser().then((user) => {
+      // user not connected
+      if (!user) {
+        redirect('/login')
+      } 
+    })
+  }, [])
+
   return (
     <>
       <h1>Welcome to Missions Manager</h1>
@@ -16,13 +27,12 @@ function Home() {
 
 function LogoutButton() {
   const [pending, setPending] = useState(false)
-  const router = useRouter()
 
   const handleClick = async () => {
     setPending(true)
     await logout()
     setPending(false)
-    router.push('/login/')
+    redirect('/login')
   }
 
   return (
