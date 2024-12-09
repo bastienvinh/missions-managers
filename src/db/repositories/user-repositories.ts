@@ -3,6 +3,7 @@
 import { eq } from "drizzle-orm"
 import db from "../schema"
 import { UserAddModel, users } from "../schema/users"
+import { RoleEnum } from "@/services/authentication/type"
 
 export async function getUserByEmailDao(email: string) {
   return db.query.users.findFirst({
@@ -26,7 +27,7 @@ export async function getUserDao(id: string) {
 }
 
 export async function getUsersDao() {
-  const users = await db.query.users.findMany({ where: (users, { isNull }) => isNull(users.deletedAt) })
+  const users = await db.query.users.findMany({ where: (users, { isNull, ne }) => isNull(users.deletedAt) && ne(users.role, RoleEnum.SUPER_ADMIN) })
   return users ?? []
 }
 
@@ -37,4 +38,8 @@ export async function updateUserDao(user: UserAddModel) {
   }
 
   await db.update(users).set(user).where(eq(users.id, user.id))
+}
+
+export async function setRoleDao(userId: string, role: RoleEnum) {
+  await db.update(users).set({ role }).where(eq(users.id, userId))
 }

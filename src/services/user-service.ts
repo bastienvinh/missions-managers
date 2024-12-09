@@ -1,6 +1,7 @@
 import * as userRepository from '@/db/repositories/user-repositories'
 import { UserAddModel } from '@/db/schema/users'
 import { AddUser } from "@/types/user-types"
+import { RoleEnum } from './authentication/type'
 
 export async function createUserService(data: AddUser) {
   if (!data.email) {
@@ -24,4 +25,8 @@ export async function getUserEmailService(email: string) {
 
 export async function updateUserService(user: UserAddModel) {
   await userRepository.updateUserDao(user)
+}
+
+export async function setRoleService(userId: string, role: RoleEnum) {
+  await userRepository.setRoleDao(userId, role)
 }

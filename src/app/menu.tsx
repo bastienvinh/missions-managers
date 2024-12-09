@@ -7,7 +7,9 @@ import { useState } from "react"
 import { logout } from "./(auth)/login/action"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { isRedirectError } from "next/dist/client/components/redirect"
-import { UserDTO } from "./dal/user-dal.utils"
+import { hasRequiredRole, UserDTO } from "./dal/user-dal.utils"
+import { RoleEnum } from "@/services/authentication/type"
+import { User } from "@/types/user-types"
 
 export default function Menu({ user }: { user?: UserDTO }) {
   return (
@@ -25,7 +27,7 @@ export default function Menu({ user }: { user?: UserDTO }) {
             <li className="flex flex-col gap-5">
               <div className="ps-2">Settings</div>
               <ul className="w-full flex flex-col gap-2">
-                <li className="w-full hover:bg-gray-500 rounded p-3 text-xl"><Link href="/users" className="flex justify-between"><span className="flex gap-2"><Users />Users</span></Link></li>
+                {hasRequiredRole(user as User, RoleEnum.ADMIN) && <li className="w-full hover:bg-gray-500 rounded p-3 text-xl"><Link href="/users" className="flex justify-between"><span className="flex gap-2"><Users />Users</span></Link></li>}
                 <li className="w-full hover:bg-gray-500 rounded p-3 text-xl"><Link href="/parameters" className="flex justify-between"><span className="flex gap-2"><SlidersHorizontal />Parameters</span></Link></li>
               </ul>
             </li>
@@ -37,7 +39,7 @@ export default function Menu({ user }: { user?: UserDTO }) {
         <div className="flex gap-2 items-center">
           <Avatar>
             {/* Im lazy to find an image ... */}
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src="/persona-01.png" alt="@shadcn" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           {user?.name}
