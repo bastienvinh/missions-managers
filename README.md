@@ -10,6 +10,12 @@ First Install nodejs, yarn and docker
 First, run the development server:
 
 ```bash
+# install yarn
+npm -g install yarn
+
+# use yarn
+yarn
+
 docker compose up -d
 
 # Check your database fist and watch evrything is okay
