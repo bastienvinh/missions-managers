@@ -3,7 +3,6 @@
 import { logger } from "@/lib/logger"
 import { modifyUser, signUp } from "@/services/authentication/auth-service"
 import { RoleEnum } from "@/services/authentication/type"
-import { getUserService } from "@/services/user-service"
 import { SignupFormSchema, UpdateUserFormSchema } from "@/services/validation/admin/register-form"
 import { isRedirectError } from "next/dist/client/components/redirect"
 

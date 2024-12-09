@@ -66,14 +66,6 @@ export async function modifyUser(id: string, email: string, password: string, na
   logger.info(`Change User informations : ${id}: ${email}`)
 }
 
-export async function signIn(email: string, password: string) {
-  const user = await getUserEmailService(email)
-  if (!user) {
-    logger.error(`Login tentative: ${email} => user doesn't exist`)
-    throw new Error(`User doesn't exists`)
-  }
-}
-
 export const roleHierarchy = [
   RoleEnum.GUEST,
   RoleEnum.REDACTOR,

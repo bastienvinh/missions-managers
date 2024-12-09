@@ -18,7 +18,7 @@ function LogoutButton() {
   const [pending, setPending] = useState(false)
   const router = useRouter()
 
-  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = async () => {
     setPending(true)
     await logout()
     setPending(false)
