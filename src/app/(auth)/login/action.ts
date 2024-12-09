@@ -6,6 +6,7 @@ import { SignInError } from "@/services/authentication/type"
 import { LoginFormSchema } from "@/services/validation/ui/login-form"
 import { AuthError } from "next-auth"
 import { isRedirectError } from "next/dist/client/components/redirect"
+import { redirect } from 'next/navigation'
 
 export type FormState = {
   success: boolean
@@ -40,6 +41,7 @@ export async function authenticate(
   try {
     const user = await signIn('credentials', formData)
     logger.info('Signin : ', user)
+    redirect('/')
   } catch (error) {
     if (isRedirectError(error)) {
       throw error

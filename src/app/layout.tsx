@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { Toaster } from "sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 
 export const metadata: Metadata = {
@@ -15,9 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body className="dark dark:bg-black h-screen w-screen">
-        {children}
-        <Toaster richColors />
+      <body className="h-screen w-screen">
+        <TooltipProvider>
+          {children}
+          <Toaster richColors />
+        </TooltipProvider>
       </body>
     </html>
   )

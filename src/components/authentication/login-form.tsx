@@ -10,9 +10,10 @@ import clsx from "clsx"
 import { useFormStatus } from "react-dom"
 import { toast } from "sonner"
 import _ from "lodash"
-import { getAuthUser } from "@/services/authentication/auth-service"
 import { getConnectedUser } from "@/app/dal/user-dal"
 import { redirect } from "next/navigation"
+import { LogIn } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 export default function LoginForm({ className }: { className?: string }) {
   const [actionState, userAction] = useActionState(authenticate, { success: false })
@@ -36,7 +37,7 @@ export default function LoginForm({ className }: { className?: string }) {
   return <form className={className} action={userAction}>
      <Card>
         <CardHeader>
-          <CardTitle>Welcome to Missions Manager - Please Log In</CardTitle>
+          <CardTitle> Please Log In</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 mb-3">
@@ -45,6 +46,7 @@ export default function LoginForm({ className }: { className?: string }) {
               id="email"
               name="email"
               type="email"
+              placeholder="Enter your email ..."
               className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.email, 'border-red-500': actionState?.errors?.email })}
             />
             {actionState?.errors?.email && <p className="text-red-500 text-sm">{actionState.errors.email}</p>}
@@ -56,6 +58,7 @@ export default function LoginForm({ className }: { className?: string }) {
               id="password"
               name="password"
               type="password"
+              placeholder="********"
               className={clsx({ 'focus-visible:ring-red-500': actionState?.errors?.password,'border-red-500': actionState?.errors?.password })}
             />
             {actionState?.errors?.password && <p className="text-red-500 text-sm">{actionState.errors.password}</p>}
@@ -63,10 +66,8 @@ export default function LoginForm({ className }: { className?: string }) {
 
         </CardContent>
         <CardFooter>
-          <div className="w-full flex justify-end">
-            <div className="justify-self-end">
-              <ConnectButton />
-            </div>
+          <div className="w-full">
+            <ConnectButton />
           </div>
         </CardFooter>
       </Card>
@@ -77,6 +78,13 @@ function ConnectButton() {
   const {pending} = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending} variant="outline">Login</Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button className="w-full" type="submit" disabled={pending} variant="outline"><LogIn />Sign In</Button>  
+      </TooltipTrigger>
+      <TooltipContent>
+        <div>To connect to the application</div>
+      </TooltipContent>
+    </Tooltip>
   )
 }
