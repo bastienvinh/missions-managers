@@ -19,7 +19,7 @@ const withAuth = <P extends object>(
   //console.log(`withAuth Component ${WrappedComponent.name} mounted`)
   return async function WithAuth(props: P) {
     const user = await getAuthUser()
-    const hasRole = await hasRequiredRole(
+    const hasRole = hasRequiredRole(
       user as UserModel,
       requiredRole ?? RoleEnum.GUEST
     )
@@ -43,6 +43,10 @@ export default withAuth
 export const withAuthAdmin = <P extends object>(
   WrappedComponent: React.ComponentType<P & WithAuthProps>
 ) => withAuth(WrappedComponent, RoleEnum.ADMIN)
+
+export const withAuthSuperAdmin = <P extends object>(
+  WrappedComponent: React.ComponentType<P & WithAuthProps>
+) => withAuth(WrappedComponent, RoleEnum.SUPER_ADMIN)
 
 export const withAuthRedactor = <P extends object>(
   WrappedComponent: React.ComponentType<P & WithAuthProps>

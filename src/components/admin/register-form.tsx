@@ -11,7 +11,7 @@ import clsx from "clsx"
 import { useActionState, useEffect, useTransition } from "react"
 import { Alert, AlertDescription } from "../ui/alert"
 import _ from  'lodash'
-import { UserDTO } from "@/app/dal/user-dal"
+import { UserDTO } from "@/app/dal/user-dal.utils"
 import { useFormStatus } from "react-dom"
 import { useForm } from "react-hook-form"
 import {zodResolver} from '@hookform/resolvers/zod'

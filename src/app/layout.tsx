@@ -23,7 +23,7 @@ export default async function RootLayout({
     <html>
       <body className="h-screen w-screen flex">
         <TooltipProvider>
-          {user && <Menu />}
+          {user && <Menu user={user} />}
           <div className="grow">
             {children}
           </div>

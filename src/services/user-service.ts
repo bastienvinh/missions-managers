@@ -14,6 +14,10 @@ export async function getUserService(userId: string) {
   return userRepository.getUserDao(userId)
 }
 
+export async function getUsersService() {
+  return userRepository.getUsersDao()
+}
+
 export async function getUserEmailService(email: string) {
   return userRepository.getUserByEmailDao(email)
 }

@@ -7,7 +7,7 @@ import { useState } from "react"
 import { logout } from "./(auth)/login/action"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { isRedirectError } from "next/dist/client/components/redirect"
-import { UserDTO } from "./dal/user-dal"
+import { UserDTO } from "./dal/user-dal.utils"
 
 export default function Menu({ user }: { user?: UserDTO }) {
   return (

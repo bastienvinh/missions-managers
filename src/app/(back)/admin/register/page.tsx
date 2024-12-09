@@ -1,6 +1,8 @@
 import RegisterForm from "@/components/admin/register-form"
 import withAuth from "@/components/features/withAuth"
 
+export const dynamic = 'force-dynamic'
+
 function Page() {
 
   return (

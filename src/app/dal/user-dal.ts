@@ -2,10 +2,10 @@
 
 import { getAuthUser } from '@/services/authentication/auth-service'
 import * as userRepositories from '@/services/user-service'
-import { User } from '@/types/user-types'
 import { cache } from 'react'
+import { userDTO, UserDTO } from './user-dal.utils'
 
-export type UserDTO = Omit<User, 'createdAt' | 'updatedAt' | 'deletedAt' | 'password' | 'salt'>
+
 
 export async function getUserDal(userId: string): Promise<UserDTO| undefined> {
   const user = await userRepositories.getUserService(userId)
@@ -22,6 +22,10 @@ export async function getUserDal(userId: string): Promise<UserDTO| undefined> {
   }
 }
 
+export async function getUsersDal(): Promise<UserDTO[]> {
+  return userRepositories.getUsersService().then(users => users.map(user => userDTO(user) as UserDTO))
+}
+
 export const getConnectedUser = cache(async () => {
   try {
     const user = await getAuthUser()
@@ -32,13 +36,3 @@ export const getConnectedUser = cache(async () => {
   }
 })
 
-export async function userDTO(user?: User): Promise<UserDTO | undefined> {
-  if (!user) return undefined
-  // const canSee = await canSeeRole() // FIXME: finish it
-  return {
-    email: user.email ?? '',
-    name: user.name ?? '',
-    role: user.role,
-    id: user.id
-  }
-}

@@ -25,6 +25,11 @@ export async function getUserDao(id: string) {
   }
 }
 
+export async function getUsersDao() {
+  const users = await db.query.users.findMany({ where: (users, { isNull }) => isNull(users.deletedAt) })
+  return users ?? []
+}
+
 export async function updateUserDao(user: UserAddModel) {
 
   if (!user.id) {
