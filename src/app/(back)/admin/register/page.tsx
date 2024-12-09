@@ -1,6 +1,7 @@
 import RegisterForm from "@/components/admin/register-form"
+import withAuth from "@/components/features/withAuth"
 
-export default function Page() {
+function Page() {
 
   return (
     <div className="w-full flex justify-center mt-4">
@@ -8,3 +9,5 @@ export default function Page() {
     </div>
   )
 }
+
+export default withAuth(Page)

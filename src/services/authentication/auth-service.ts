@@ -1,14 +1,17 @@
-'use server'
-
 import { RoleEnum } from "./type"
 import { logger } from "@/lib/logger"
 import { generateSalt, hashPassword } from "./crypt"
 import { AddUser, User } from "@/types/user-types"
 import { createUserService, getUserEmailService, getUserService, updateUserService } from "../user-service"
 import _ from "lodash"
+import { auth } from "./auth"
 
-export async function getAuthUser() {
-  // TODO: finish it
+export const getAuthUser = async () => {
+  const session = await auth()
+  if (!session?.user?.email) return
+  const email = session?.user?.email ?? ''
+  const user = await getUserEmailService(email)
+  return user
 }
 
 export async function signUp(email: string, password: string, name: string, role: RoleEnum) {
@@ -69,8 +72,6 @@ export async function signIn(email: string, password: string) {
     logger.error(`Login tentative: ${email} => user doesn't exist`)
     throw new Error(`User doesn't exists`)
   }
-
-  
 }
 
 export const roleHierarchy = [
@@ -80,7 +81,7 @@ export const roleHierarchy = [
   RoleEnum.SUPER_ADMIN
 ]
 
-export async function hasRequiredRole(
+export function hasRequiredRole(
   userConnected?: User,
   requestedRole?: RoleEnum
 ) {

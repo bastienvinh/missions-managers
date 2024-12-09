@@ -1,7 +1,7 @@
 'use server'
 
 import { logger } from "@/lib/logger"
-import { signIn } from "@/services/authentication/auth"
+import { signIn, signOut } from "@/services/authentication/auth"
 import { SignInError } from "@/services/authentication/type"
 import { LoginFormSchema } from "@/services/validation/ui/login-form"
 import { AuthError } from "next-auth"
@@ -61,8 +61,16 @@ export async function authenticate(
         }
       }
     }
-    throw error
+
+    return {
+      success: false,
+      message: Reflect.get(error as Error, 'message')
+    }
   }
 
   return { success: true, message: 'Success user connected' }
+}
+
+export async function logout() {
+  await signOut()
 }

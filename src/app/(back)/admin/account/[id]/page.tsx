@@ -1,8 +1,9 @@
 import { getUserDal } from "@/app/dal/user-dal"
 import RegisterForm from "@/components/admin/register-form"
+import withAuth from "@/components/features/withAuth"
 import { notFound } from "next/navigation"
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+async function Page({ params }: { params: Promise<{ id: string }> }) {
   const allParams = await params
   const user = await getUserDal(allParams.id)
 
@@ -16,3 +17,5 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     </div>
   )
 }
+
+export default withAuth(Page)

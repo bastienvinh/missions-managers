@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body className="dark dark:bg-black">
+      <body className="dark dark:bg-black h-screen w-screen">
         {children}
         <Toaster richColors />
       </body>

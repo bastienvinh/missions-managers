@@ -1,6 +1,6 @@
 'use client'
 
-import { register as registerFormAction, updateUser } from "@/app/admin/register/action"
+import { register as registerFormAction, updateUser } from "@/app/(back)/admin/register/action"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,8 +10,8 @@ import { Label } from "@radix-ui/react-label"
 import clsx from "clsx"
 import { useActionState, useEffect, useRef, useTransition } from "react"
 import { Alert, AlertDescription } from "../ui/alert"
-import _ from  'lodash'
-import { UserDao } from "@/app/dal/user-dal"
+import _, { rest } from  'lodash'
+import { UserDTO } from "@/app/dal/user-dal"
 import { useFormStatus } from "react-dom"
 import { useForm } from "react-hook-form"
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -20,7 +20,7 @@ import {toast} from 'sonner'
 import { SignupFormSchema, SignupFormSchemaType, UpdateUserFormSchema } from "@/services/validation/admin/register-form"
 
 
-export default function RegisterForm({ className, user }: { className: string, user?: UserDao }) {
+export default function RegisterForm({ className, user }: { className: string, user?: UserDTO }) {
   const [actionState, registerAction] = useActionState(user ? updateUser : registerFormAction, { success: false })
 
   const [isPending, startTransition] = useTransition()
@@ -47,7 +47,7 @@ export default function RegisterForm({ className, user }: { className: string, u
       toast.success(user ? 'Success Modified User' : 'Succes Added User')
       if (!user) reset()
     }
-  }, [isPending, actionState])
+  }, [isPending, actionState, reset, user])
 
 
   function onSubmitHandler(data: SignupFormSchemaType) {
