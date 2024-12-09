@@ -41,9 +41,9 @@ export async function authenticate(
   try {
     const user = await signIn('credentials', formData)
     logger.info('Signin : ', user)
-    redirect('/')
   } catch (error) {
     if (isRedirectError(error)) {
+      console.error('worowsdsnadsjdns')
       throw error
     }
     const signInError = error as SignInError
@@ -74,5 +74,5 @@ export async function authenticate(
 }
 
 export async function logout() {
-  await signOut()
+  await signOut({ redirect: true, redirectTo: '/login' })
 }

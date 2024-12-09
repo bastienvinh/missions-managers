@@ -8,7 +8,6 @@ import { Label } from "../ui/label"
 import { authenticate } from "@/app/(auth)/login/action"
 import clsx from "clsx"
 import { useFormStatus } from "react-dom"
-import { toast } from "sonner"
 import _ from "lodash"
 import { getConnectedUser } from "@/app/dal/user-dal"
 import { redirect } from "next/navigation"
@@ -25,14 +24,6 @@ export default function LoginForm({ className }: { className?: string }) {
       }
     })
   }, [])
-
-  useEffect(() => {
-    if (actionState?.success) {
-      toast.success('Connection Success')
-    } else if (!actionState?.success && !_.isEmpty(actionState?.message)) {
-      toast.error(actionState?.message)
-    }
-  }, [actionState])
 
   return <form className={className} action={userAction}>
      <Card>
