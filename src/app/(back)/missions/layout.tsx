@@ -3,9 +3,9 @@ import MissionPageMenu from "./components/MissionPageMenu"
 
 export default function Layout({ children } : { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1 w-full h-full">
+    <div className="w-full h-full grid gap-2 overflow-hidden" style={{ gridTemplateRows: "auto 1fr" }}>
       <MissionPageMenu />
-      <div className="grow">
+      <div className="grow overflow-y-auto">
         {children}
       </div>
     </div>

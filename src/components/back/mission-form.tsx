@@ -8,6 +8,9 @@ import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { ContractEnum } from "@/services/missions/type"
+import { Checkbox } from "../ui/checkbox"
+import StarRating from "../star-rating"
+import SourceMissions from "../source-missions"
 
 export default function MissionsForm(_value: { user?: UserDTO }) {
   const form = useForm()
@@ -90,6 +93,52 @@ export default function MissionsForm(_value: { user?: UserDTO }) {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="analytics"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contract Type</FormLabel>
+              <FormControl>
+                <div className="flex gap-2 items-center">
+                  <Checkbox {...field} />
+                  <label htmlFor="analytics">Put on analytics</label>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField name="sourceUrl" render={({ field }) => (
+          <FormItem>
+            <FormLabel>Url</FormLabel>
+            <FormControl>
+              <Input {...field} type="text" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+
+        <FormField name="likeLevel" render={({ field }) => (
+          <FormItem>
+            <FormLabel>Level (Rate this missions)</FormLabel>
+            <FormControl>
+              <StarRating rating={field.value} onRatingChange={field.onChange} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+
+        <FormField name="sourceId" render={({ field }) => (
+          <FormItem>
+            <FormLabel>Source</FormLabel>
+            <FormControl>
+              <SourceMissions source={field.value} onSourceChange={field.onChange} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
 
         <div className="flex justify-end">
           <Button variant="outline">Save</Button>

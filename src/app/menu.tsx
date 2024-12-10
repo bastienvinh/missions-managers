@@ -13,8 +13,8 @@ import { User } from "@/types/user-types"
 
 export default function Menu({ user }: { user?: UserDTO }) {
   return (
-    <div className="w-1/6 h-full flex flex-col justify-between bg-slate-800">
-      <div className="w-full p-5 h-full">
+    <div className="w-full h-full flex flex-col justify-between bg-slate-800">
+      <div className="w-full p-5">
         <nav>
           <ul role="list" className="w-full text-white flex flex-col gap-10">
             <li className="w-full">
@@ -35,7 +35,7 @@ export default function Menu({ user }: { user?: UserDTO }) {
         </nav>
       </div>
 
-      <div className="bg-slate-900 p-4 flex justify-between">
+      <div className="bg-slate-900 p-4 flex gap-2 justify-between">
         <div className="flex gap-2 items-center">
           <Avatar>
             {/* Im lazy to find an image ... */}

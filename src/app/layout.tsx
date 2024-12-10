@@ -21,10 +21,10 @@ export default async function RootLayout({
 
   return (
     <html>
-      <body className="h-screen w-screen flex">
+      <body className="h-screen w-screen grid overflow-hidden" style={{ gridTemplateColumns: user ? "auto 1fr" : "1fr", gridTemplateRows: "1fr" }}>
         <TooltipProvider>
           {user && <Menu user={user} />}
-          <div className="grow">
+          <div className="overflow-hidden">
             {children}
           </div>
           <Toaster richColors />

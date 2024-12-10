@@ -13,8 +13,10 @@ function Page() {
 
       <div className="border border-b h-0 border-zinc-400 w-2/3"></div>
 
-      <div className="w-1/2">
-        <MissionsForm />
+      <div className="w-full flex grow">
+        <div className="w-1/2">
+          <MissionsForm />
+        </div>
       </div>
     </div>
   )
