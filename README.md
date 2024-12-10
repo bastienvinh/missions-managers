@@ -18,13 +18,21 @@ yarn
 
 docker compose up -d
 
-# Check your database fist and watch evrything is okay
-yarn db:check
-# Generate Drizzle Database script
-yarn db:generate
-# Generate your database
-yarn db:migrate
+# to install database
+yarn db:reset-seed
 
 # Start to test or code
 yarn dev
 ```
+
+## How to connect
+
+| **Login**           | **Password**            |
+|---------------------|-------------------------|
+| **bastien@test.fr** | `rootroot1`             |
+
+## How to create an user in the database
+(on construction)
+
+You must create a salt and use @noble library to generate your password.
+@author: I will add a script later

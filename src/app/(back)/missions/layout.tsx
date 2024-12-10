@@ -1,5 +1,5 @@
-import React from "react";
-import MissionPageMenu from "./components/MissionPageMenu";
+import React from "react"
+import MissionPageMenu from "./components/MissionPageMenu"
 
 export default function Layout({ children } : { children: React.ReactNode }) {
   return (

@@ -11,7 +11,8 @@
     "db:clear": "tsx src/db/scripts/clear.ts true",
     "db:seed": "tsx src/db/scripts/seed.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:reset-seed": "yarn db:check && rimraf drizzle && yarn db:clear && yarn db:generate && yarn db:migrate && yarn db:seed"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
@@ -60,6 +61,7 @@
     "eslint-plugin-react": "^7.37.2",
     "globals": "^15.13.0",
     "postcss": "^8.4.49",
+    "rimraf": "^6.0.1",
     "shadcn": "^2.1.6",
     "tailwindcss": "^3.4.16",
     "tsx": "^4.19.2",

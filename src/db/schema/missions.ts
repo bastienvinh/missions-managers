@@ -17,8 +17,9 @@ export const missions = pgTable('mission', {
   requirements: text("requirements"),
   benefits: text("benefits"),
   drawbacks: text("drawbacks"),
-  authorId: uuid("author_id").references(() => users.id),
-  analytics: boolean('analytics').default(true)
+  authorId: uuid("author_id").notNull().references(() => users.id),
+  analytics: boolean('analytics').default(true),
+  sourceUrl: varchar('source_url')
 })
 
 export const technologies = pgTable("technology", {
