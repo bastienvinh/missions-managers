@@ -17,7 +17,7 @@ async function Page() {
     <div className="p-4 w-full h-full flex flex-col gap-10">
       <div className="flex justify-between items-center rounded bg-slate-700 p-4">
         <div>
-          <h2 className="text-slate-300 text-xl font-semibold">Users</h2>
+          <h2 className="text-slate-300 text-xl font-mono">Users</h2>
           <p>A list of all the users in your account including their name, title, email and role.</p>
         </div>
         <div>

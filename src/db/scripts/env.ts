@@ -19,21 +19,6 @@ export default function initDotEnv(environment: EnvironmentTypeLabel = (process.
       console.log(`Environnement chargé à partir de ${envFilePath}`)
     }
   }
-
-  // if (environment === 'production') {
-  //   const envFilePath = '.env.production'
-
-  //   const result = dotenv.config({ path: envFilePath })
-
-  //   if (result.error) {
-  //     console.error(
-  //       `Erreur lors du chargement du fichier ${envFilePath}:`,
-  //       result.error
-  //     )
-  //   } else {
-  //     console.log(`Environnement chargé à partir de ${envFilePath}`)
-  //   }
-  // }
   
 }
 

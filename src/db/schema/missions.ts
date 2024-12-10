@@ -8,6 +8,7 @@ export const missions = pgTable('mission', {
   id:  uuid('id')
     .default(sql`uuid_generate_v4()`)
     .primaryKey(),
+  title: varchar("title").notNull(),
   company: varchar("company"),
   description: text("description"),
   expirationDate: timestamp("expiration_date"),
@@ -19,14 +20,15 @@ export const missions = pgTable('mission', {
   drawbacks: text("drawbacks"),
   authorId: uuid("author_id").notNull().references(() => users.id),
   analytics: boolean('analytics').default(true),
-  sourceUrl: varchar('source_url')
+  sourceUrl: varchar('source_url'),
+  sourceId: uuid("source_id").notNull().references(() => sources.id),
 })
 
 export const technologies = pgTable("technology", {
   id: uuid('id')
     .default(sql`uuid_generate_v4()`)
     .primaryKey(),
-  name: varchar("name"),
+  name: varchar("name").notNull(),
   description: varchar("description"),
   value: integer("value")
 })
@@ -36,6 +38,17 @@ export const missionsHasTechnologies = pgTable("missions_has_techonologies", {
   technologyId: uuid("technology_id").notNull().references(() => technologies.id)
 })
 
-export const missionsRelations = relations(missions, ({ many }) => ({
-  technologies: many(technologies)
+export const missionsRelations = relations(missions, ({ many, one }) => ({
+  technologies: many(technologies),
+  source: one(sources, {
+    fields: [missions.sourceId],
+    references: [sources.id]
+  })
 }))
+
+export const sources = pgTable("source", {
+  id: uuid('id')
+  .default(sql`uuid_generate_v4()`)
+  .primaryKey(),
+  name: varchar("name").notNull()
+})
