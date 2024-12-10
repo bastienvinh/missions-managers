@@ -30,3 +30,7 @@ export async function updateUserService(user: UserAddModel) {
 export async function setRoleService(userId: string, role: RoleEnum) {
   await userRepository.setRoleDao(userId, role)
 }
+
+export async function deleteUserService(id: string) {
+  await userRepository.deleteUserDao(id)
+}

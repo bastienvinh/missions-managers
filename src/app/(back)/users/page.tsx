@@ -2,8 +2,10 @@ import { getUsersDal } from "@/app/dal/user-dal"
 import { withAuthAdmin } from "@/components/features/withAuth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Pencil, Trash2 } from "lucide-react"
+import { Pencil, Plus } from "lucide-react"
 import DropdownRole from "./components/DropdownRole"
+import DeleteUserButton from "./components/DeleteUserButton"
+import Link from "next/link"
 
 export const dynamic = 'force-dynamic'
 
@@ -19,12 +21,12 @@ async function Page() {
           <p>A list of all the users in your account including their name, title, email and role.</p>
         </div>
         <div>
-          <Button variant="secondary">Add User</Button>
+          <Button variant="secondary"><Link href="/admin/register" className="flex items-center gap-3"><Plus />Add User</Link></Button>
         </div>
       </div>
 
       <div className="flex justify-center items-center grow">
-        <div className="space-y-4 rounded-lg bg-slate-700 p-4">
+        {!!users.length && <div className="space-y-4 rounded-lg bg-slate-700 p-4">
           <h2 className="text-sm font-medium text-white">People with access</h2>
           <div className="space-y-4">
             {users.map((user) => (
@@ -42,12 +44,12 @@ async function Page() {
                   </div>
                 </div>
                 <DropdownRole user={user} />
-                <Button variant="secondary"><Pencil /></Button>
-                <Button variant="destructive"><Trash2 /></Button>
+                <Button variant="secondary"><Link href={`/admin/account/${user.id}`}><Pencil /></Link></Button>
+                <DeleteUserButton user={user} />
               </div>
             ))}
           </div>
-        </div>
+        </div>}
       </div>
       
     </div>

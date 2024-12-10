@@ -6,17 +6,18 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { RoleEnum } from "@/services/authentication/type"
 import { setRoleService } from "@/services/user-service"
 import { ChevronDown } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
 
 export default function DropdownRole({ user }: { user: UserDTO }) {
   const [role, setRole] = useState(user.role)
 
-  useEffect(() => {
+  function handleChangeRole(role: RoleEnum) {
     setRoleService(user.id, role as RoleEnum).then(() => {
+      setRole(role)
       toast.success('Role has changed')
     })
-  }, [user, role])
+  }
   
   return (
     <DropdownMenu>
@@ -30,9 +31,9 @@ export default function DropdownRole({ user }: { user: UserDTO }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuItem onClick={() => setRole(RoleEnum.ADMIN)} className="cursor-pointer">{RoleEnum.ADMIN}</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setRole(RoleEnum.REDACTOR)} className="cursor-pointer">{RoleEnum.REDACTOR}</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setRole(RoleEnum.GUEST)} className="cursor-pointer">{RoleEnum.GUEST}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleChangeRole(RoleEnum.ADMIN)} className="cursor-pointer">{RoleEnum.ADMIN}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleChangeRole(RoleEnum.REDACTOR)} className="cursor-pointer">{RoleEnum.REDACTOR}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleChangeRole(RoleEnum.GUEST)} className="cursor-pointer">{RoleEnum.GUEST}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

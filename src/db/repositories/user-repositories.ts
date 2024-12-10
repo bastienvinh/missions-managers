@@ -27,7 +27,7 @@ export async function getUserDao(id: string) {
 }
 
 export async function getUsersDao() {
-  const users = await db.query.users.findMany({ where: (users, { isNull, ne }) => isNull(users.deletedAt) && ne(users.role, RoleEnum.SUPER_ADMIN) })
+  const users = await db.query.users.findMany({ where: (users, { isNull, ne, and }) => and(isNull(users.deletedAt), ne(users.role, RoleEnum.SUPER_ADMIN)) })
   return users ?? []
 }
 
@@ -42,4 +42,8 @@ export async function updateUserDao(user: UserAddModel) {
 
 export async function setRoleDao(userId: string, role: RoleEnum) {
   await db.update(users).set({ role }).where(eq(users.id, userId))
+}
+
+export async function deleteUserDao(userId: string) {
+  await db.update(users).set({ deletedAt: new Date().toISOString() }).where(eq(users.id, userId))
 }

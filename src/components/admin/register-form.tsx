@@ -18,6 +18,8 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {toast} from 'sonner'
 
 import { SignupFormSchema, SignupFormSchemaType, UpdateUserFormSchema } from "@/services/validation/admin/register-form"
+import { redirect } from "next/navigation"
+import { deleteUserService } from "@/services/user-service"
 
 
 export default function RegisterForm({ className, user }: { className: string, user?: UserDTO }) {
@@ -44,11 +46,10 @@ export default function RegisterForm({ className, user }: { className: string, u
 
   useEffect(() => {
     if (!isPending && actionState?.success) {
-      toast.success(user ? 'Success Modified User' : 'Succes Added User')
-      if (!user) reset()
+      toast.success('User Created')
+      redirect('/users')
     }
-  }, [isPending, actionState, reset, user])
-
+  }, [isPending, actionState])
 
   function onSubmitHandler(data: SignupFormSchemaType) {
     const formData = new FormData()
@@ -66,6 +67,14 @@ export default function RegisterForm({ className, user }: { className: string, u
     startTransition(() => registerAction(null))
     // TODO: Manage the isPending when the transition is not finished
     reset()
+  }
+
+  async function handleDeleteUser() {
+    if (user) {
+      await deleteUserService(user.id)
+      toast.success('Delete User Successful')
+      redirect('/users')
+    }
   }
 
   return (
@@ -147,7 +156,7 @@ export default function RegisterForm({ className, user }: { className: string, u
         <CardFooter>
           <div className="w-full flex justify-between">
             <div>
-              {user ? <Button type="button" variant="destructive">Delete Forever</Button> : null}
+              {user ? <Button type="button" variant="destructive" onClick={handleDeleteUser}>Delete Forever</Button> : null}
             </div>
             <div className="justify-self-end flex gap-3">
               <Button variant="secondary" type="button" onClick={onResetHandler}>Reset</Button>
