@@ -1,6 +1,5 @@
 'use client'
 
-import { UserDTO } from "@/app/dal/user-dal.utils"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import {useForm} from 'react-hook-form'
 import { Input } from "../ui/input"
@@ -11,13 +10,59 @@ import { ContractEnum } from "@/services/missions/type"
 import { Checkbox } from "../ui/checkbox"
 import StarRating from "../star-rating"
 import SourceMissions from "../source-missions"
+import TechnologiesSelector from "../technologies-selector"
+import { MissionFormSchema, MissionSchemaType } from "@/services/validation/ui/mission-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useActionState, useEffect, useTransition } from "react"
+import { addUpdateMission } from "@/app/(back)/missions/action"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import _ from "lodash"
+import { toast } from "sonner"
+// import { AddMission } from "@/types/missions-types"
+// import { redirect } from "next/navigation"
 
-export default function MissionsForm(_value: { user?: UserDTO }) {
-  const form = useForm()
+export default function MissionsForm() {
+  const form = useForm<MissionSchemaType>({
+    resolver: zodResolver(MissionFormSchema),
+    defaultValues: {
+      analytics: true,
+      company: '',
+      type: ContractEnum.Others,
+      description: '',
+      level: 0,
+      salary: 0,
+      source: '',
+      technologies: [],
+      title: 'Job #',
+      url: ''
+    }
+  })
+
+  const [actionState, formAction] = useActionState(addUpdateMission, { init: true, success: false })
+  const [isPending, startTransition] = useTransition()
+
+  function onSubmitHandler(data: MissionSchemaType) {
+    console.log(data)
+    startTransition(() => formAction(data))
+  }
+
+  const hasError = !isPending && !actionState?.success && !actionState?.init
+
+  useEffect(() => {
+    if(!isPending && !actionState?.init && actionState?.success) {
+      toast.success('Mission Created')
+    }
+  }, [isPending, actionState])
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-3">
+      {hasError && <Alert variant="destructive">
+        <AlertTitle>Failed</AlertTitle>
+        <AlertDescription>
+          {actionState?.message ?? 'Failed Server Insertion'}
+        </AlertDescription>
+      </Alert>}
+      <form className="flex flex-col gap-3" onSubmit={form.handleSubmit(onSubmitHandler)}>
         <FormField name="title" render={({ field }) => (
           <FormItem>
             <FormLabel>Title</FormLabel>
@@ -52,7 +97,12 @@ export default function MissionsForm(_value: { user?: UserDTO }) {
           <FormItem>
             <FormLabel>Salary</FormLabel>
             <FormControl>
-              <Input {...field} type="number" />
+            <Input
+              type="number"
+              {...field}
+              onChange={(e) => field.onChange(e.target.valueAsNumber)}
+              value={String(field.value)}
+            />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -85,6 +135,7 @@ export default function MissionsForm(_value: { user?: UserDTO }) {
                   <SelectItem key={ContractEnum.PartTime} value={ContractEnum.PartTime}>{ContractEnum.PartTime}</SelectItem>
                   <SelectItem key={ContractEnum.Permanent} value={ContractEnum.Permanent}>{ContractEnum.Permanent}</SelectItem>
                   <SelectItem key={ContractEnum.Temporary} value={ContractEnum.Temporary}>{ContractEnum.Temporary}</SelectItem>
+                  <SelectItem key={ContractEnum.Internship} value={ContractEnum.Internship}>{ContractEnum.Internship}</SelectItem>
                   <SelectItem key={ContractEnum.Others} value={ContractEnum.Others}>{ContractEnum.Others}</SelectItem>
                 </SelectContent>
               </Select>
@@ -101,7 +152,7 @@ export default function MissionsForm(_value: { user?: UserDTO }) {
               <FormLabel>Contract Type</FormLabel>
               <FormControl>
                 <div className="flex gap-2 items-center">
-                  <Checkbox {...field} />
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   <label htmlFor="analytics">Put on analytics</label>
                 </div>
               </FormControl>
@@ -140,8 +191,18 @@ export default function MissionsForm(_value: { user?: UserDTO }) {
           </FormItem>
         )} />
 
+        <FormField name="technologies" render={({field}) => (
+          <FormItem>
+            <FormLabel>Technologies</FormLabel>
+            <FormControl>
+              <TechnologiesSelector value={field.value} onChangeValue={field.onChange} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+
         <div className="flex justify-end">
-          <Button variant="outline">Save</Button>
+          <Button disabled={isPending} type="submit" variant="outline">Save</Button>
         </div>
       </form>
     </Form>

@@ -2,7 +2,7 @@ import {relations, sql} from 'drizzle-orm'
 import { boolean, doublePrecision, integer, pgEnum, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { users } from './users'
 
-export const contractTypes = pgEnum("contract_types", ["Fulltime", "Permanent", "Temporary", "PartTime", "Others"])
+export const contractTypes = pgEnum("contract_types", ["Fulltime", "Permanent", "Temporary", "PartTime", "Internship", "Others"])
 
 export const missions = pgTable('mission', {
   id:  uuid('id')
@@ -52,3 +52,9 @@ export const sources = pgTable("source", {
   .primaryKey(),
   name: varchar("name").notNull()
 })
+
+export type TechnologyModel = typeof technologies.$inferSelect
+export type TechnologyAddModel= typeof technologies.$inferInsert
+
+export type MissionModel = typeof missions.$inferSelect
+export type MissionAddModel = typeof missions.$inferInsert

@@ -3,5 +3,6 @@ export enum ContractEnum {
   Permanent = "Permanent", 
   Temporary = "Temporary", 
   PartTime = "PartTime", 
+  Internship = "Internship",
   Others = "Others"
 }
