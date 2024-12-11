@@ -1,13 +1,12 @@
 import {relations, sql} from 'drizzle-orm'
 import { boolean, doublePrecision, integer, pgEnum, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { users } from './users'
-import { v4 as uuid_v4 } from 'uuid'
 
 export const contractTypes = pgEnum("contract_types", ["Fulltime", "Permanent", "Temporary", "PartTime", "Internship", "Others"])
 
 export const missions = pgTable('mission', {
   id:  uuid('id')
-    .default(uuid_v4())
+    .default(sql`uuid_generate_v4()`)
     .primaryKey(),
   title: varchar("title").notNull(),
   company: varchar("company"),

@@ -56,8 +56,7 @@ export default function MissionsForm({mission}: { mission?: UpdateMission }) {
   useEffect(() => {
     if(!isPending && !actionState?.init && actionState?.success) {
       toast.success('Mission Created')
-      form.reset()
-    } else if (!isPending && !actionState?.success) {
+    } else if (!isPending && !actionState?.init && !actionState?.success) {
       toast.error('Failed Data Insertion')
     }
   }, [isPending, actionState, form])
