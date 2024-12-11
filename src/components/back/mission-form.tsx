@@ -23,21 +23,24 @@ import { cn } from "@/lib/utils"
 import dayjs from 'dayjs'
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
+import { UpdateMission } from "@/types/missions-types"
 
-export default function MissionsForm() {
+export default function MissionsForm({mission}: { mission?: UpdateMission }) {
   const form = useForm<MissionSchemaType>({
     resolver: zodResolver(MissionFormSchema),
     defaultValues: {
-      analytics: true,
-      company: '',
-      type: ContractEnum.Others,
-      description: '',
-      level: 0,
-      salary: 0,
-      source: '',
-      technologies: [],
-      title: 'Job #',
-      url: ''
+      analytics: mission?.analytics ?? true,
+      company: mission?.company ?? '',
+      type: mission?.type as ContractEnum ?? ContractEnum.Others,
+      description: mission?.description ?? '',
+      level: mission?.likeLevel ?? 0,
+      salary: mission?.salary ?? 0,
+      source: mission?.sourceUrl ?? '',
+      technologies: mission?.technologies ?? [],
+      title: mission?.title ?? `New Job # ${_.uniqueId()}`,
+      url: mission?.sourceUrl ?? '',
+      expirationDate: mission?.expirationDate ?? new Date(),
+      id: mission?.id
     }
   })
 
@@ -45,7 +48,6 @@ export default function MissionsForm() {
   const [isPending, startTransition] = useTransition()
 
   function onSubmitHandler(data: MissionSchemaType) {
-    console.log(data)
     startTransition(() => formAction(data))
   }
 
@@ -54,8 +56,11 @@ export default function MissionsForm() {
   useEffect(() => {
     if(!isPending && !actionState?.init && actionState?.success) {
       toast.success('Mission Created')
+      form.reset()
+    } else if (!isPending && !actionState?.success) {
+      toast.error('Failed Data Insertion')
     }
-  }, [isPending, actionState])
+  }, [isPending, actionState, form])
 
   return (
     <Form {...form}>

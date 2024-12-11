@@ -2399,10 +2399,10 @@ drizzle-kit@^0.29.1:
     esbuild "^0.19.7"
     esbuild-register "^3.5.0"
 
-drizzle-orm@^0.37.0:
-  version "0.37.0"
-  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.37.0.tgz#313c508164922cf99cee5fa17381c503035538fa"
-  integrity sha512-AsCNACQ/T2CyZUkrBRUqFT2ibHJ9ZHz3+lzYJFFn3hnj7ylIeItMz5kacRG89uSE74nXYShqehr6u+6ks4JR1A==
+drizzle-orm@^0.38.0:
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.38.0.tgz#aaa98c5f3280efc2c98f5350bf2340bed2e85ba0"
+  integrity sha512-Ev1UYKOUxiVwLZZfos4hoNDMDkp313FqF0CHelhR+BeOdb76z/a6pKF6SgYQSrmj6EXH4cy6QIkmuxl2KIFW0A==
 
 dunder-proto@^1.0.0:
   version "1.0.0"
@@ -5418,6 +5418,11 @@ util-deprecate@^1.0.1, util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@^11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.0.3.tgz#248451cac9d1a4a4128033e765d137e2b2c49a3d"
+  integrity sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==
 
 wcwidth@^1.0.1:
   version "1.0.1"

@@ -42,7 +42,6 @@ export async function authenticate(
     logger.info('Signin : ', user)
   } catch (error) {
     if (isRedirectError(error)) {
-      console.error('worowsdsnadsjdns')
       throw error
     }
     const signInError = error as SignInError

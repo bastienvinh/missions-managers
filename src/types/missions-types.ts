@@ -6,3 +6,4 @@ export type AddTechnology = TechnologyAddModel
 
 export type Mission = MissionModel
 export type AddMission = MissionAddModel
+export type UpdateMission = AddMission & { technologies: string[] }

@@ -5,8 +5,8 @@ import { getSourcesService } from "@/services/missions/missions-service"
 type Sources = Awaited<ReturnType<typeof getSourcesService>>
 
 interface SourceMissionsProps {
-  source: string
-  onSourceChange: (source: string) => void
+  source?: string
+  onSourceChange?: (source: string) => void
 }
 
 export default function SourceMissions({ source, onSourceChange }: SourceMissionsProps) {
@@ -14,13 +14,16 @@ export default function SourceMissions({ source, onSourceChange }: SourceMission
   const [sources, setSources] = useState<Sources>([])
 
   useEffect(() => {
-    getSourcesService().then(sources => setSources(sources))
-  }, [])
+    getSourcesService().then(sources => {
+      setSources(sources)
+      if (onSourceChange) onSourceChange(sources[0].id)
+    })
+  }, [onSourceChange])
 
   return (
-    <Select defaultValue={source} value={source} onValueChange={value => onSourceChange(value)}>
+    <Select defaultValue={source} value={source} onValueChange={value => onSourceChange && onSourceChange(value)}>
       <SelectTrigger>
-        <SelectValue placeholder="Select a Source" />
+        <SelectValue placeholder="Select a source" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

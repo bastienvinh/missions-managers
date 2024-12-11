@@ -2,6 +2,7 @@ import { ContractEnum } from "@/services/missions/type"
 import { z } from "zod"
 
 export const MissionFormSchema = z.object({
+  id: z.string().min(1).optional(),
   title: z.string().min(4, "Title is required"),
   company: z.string().min(1, "Company name is required"),
   expirationDate: z.date().optional(),
