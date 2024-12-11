@@ -18,8 +18,11 @@ import { addUpdateMission } from "@/app/(back)/missions/action"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import _ from "lodash"
 import { toast } from "sonner"
-// import { AddMission } from "@/types/missions-types"
-// import { redirect } from "next/navigation"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { cn } from "@/lib/utils"
+import dayjs from 'dayjs'
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "../ui/calendar"
 
 export default function MissionsForm() {
   const form = useForm<MissionSchemaType>({
@@ -56,14 +59,14 @@ export default function MissionsForm() {
 
   return (
     <Form {...form}>
-      {hasError && <Alert variant="destructive">
+      {hasError && <Alert className="mb-4" variant="destructive">
         <AlertTitle>Failed</AlertTitle>
         <AlertDescription>
           {actionState?.message ?? 'Failed Server Insertion'}
         </AlertDescription>
       </Alert>}
       <form className="flex flex-col gap-3" onSubmit={form.handleSubmit(onSubmitHandler)}>
-        <FormField name="title" render={({ field }) => (
+        <FormField control={form.control} name="title" render={({ field }) => (
           <FormItem>
             <FormLabel>Title</FormLabel>
             <FormControl>
@@ -73,7 +76,7 @@ export default function MissionsForm() {
           </FormItem>
         )} />
 
-        <FormField name="company" render={({ field }) => (
+        <FormField control={form.control} name="company" render={({ field }) => (
           <FormItem>
             <FormLabel>Company</FormLabel>
             <FormControl>
@@ -83,17 +86,45 @@ export default function MissionsForm() {
           </FormItem>
         )} />
 
-        <FormField name="expirationDate" render={({ field }) => (
-          <FormItem>
+        <FormField control={form.control} name="expirationDate" render={({ field }) => (
+          <FormItem className="flex flex-col gap-1">
             <FormLabel>Expiration Date (optional)</FormLabel>
-            <FormControl>
-              <Input {...field} type="date" />
-            </FormControl>
+            <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        dayjs(field.value).format("YYYY-MM-DD")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date < new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             <FormMessage />
           </FormItem>
         )} />
 
-        <FormField name="salary" render={({ field }) => (
+        <FormField control={form.control} name="salary" render={({ field }) => (
           <FormItem>
             <FormLabel>Salary</FormLabel>
             <FormControl>
@@ -108,7 +139,7 @@ export default function MissionsForm() {
           </FormItem>
         )} />
 
-        <FormField name="description" render={({ field }) => (
+        <FormField  control={form.control} name="description" render={({ field }) => (
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
@@ -161,17 +192,17 @@ export default function MissionsForm() {
           )}
         />
 
-        <FormField name="sourceUrl" render={({ field }) => (
+        <FormField control={form.control} name="url" render={({ field }) => (
           <FormItem>
             <FormLabel>Url</FormLabel>
             <FormControl>
-              <Input {...field} type="text" />
+              <Input {..._.omit(field, 'value')} value={field.value ?? ''} type="text" />
             </FormControl>
             <FormMessage />
           </FormItem>
         )} />
 
-        <FormField name="likeLevel" render={({ field }) => (
+        <FormField control={form.control} name="level" render={({ field }) => (
           <FormItem>
             <FormLabel>Level (Rate this missions)</FormLabel>
             <FormControl>
@@ -181,7 +212,7 @@ export default function MissionsForm() {
           </FormItem>
         )} />
 
-        <FormField name="sourceId" render={({ field }) => (
+        <FormField control={form.control} name="source" render={({ field }) => (
           <FormItem>
             <FormLabel>Source</FormLabel>
             <FormControl>
@@ -191,7 +222,7 @@ export default function MissionsForm() {
           </FormItem>
         )} />
 
-        <FormField name="technologies" render={({field}) => (
+        <FormField control={form.control} name="technologies" render={({field}) => (
           <FormItem>
             <FormLabel>Technologies</FormLabel>
             <FormControl>

@@ -33,6 +33,7 @@ export async function addUpdateMission(
   const parsedFields = MissionFormSchema.safeParse(formData)
 
   if (!parsedFields.success) {
+    console.log(parsedFields.error)
     return {
       success: false,
       errors: parsedFields.error.flatten().fieldErrors,
@@ -40,5 +41,5 @@ export async function addUpdateMission(
     }
   }
 
-  return { success: false }
+  return { success: true, message: 'success' }
 }

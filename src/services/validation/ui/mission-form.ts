@@ -11,7 +11,11 @@ export const MissionFormSchema = z.object({
   // Job details
   type: z.nativeEnum(ContractEnum),
   analytics: z.boolean().default(true),
-  url: z.string().url("Must be a valid URL"),
+  url: z.string()
+    .url({ message: "Must be a valid URL" })
+    .or(z.literal(""))
+    .nullable()
+    .transform((val) => (val === "" ? null : val)),
   
   // Rating and categorization
   level: z.number().min(0).max(10),

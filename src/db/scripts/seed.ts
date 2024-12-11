@@ -26,7 +26,7 @@ const seed = async () => {
   // password: rootroot1
   // username: bastien@test.fr
   await client.query(` 
-      INSERT INTO "public"."users" ("id", "name", "email", "password", "salt", "role", "createdat", "updatedat", "deletedat") VALUES ('f1579709-9ef2-4e67-95cf-8dcd1509d3db', 'Bastien VINH', 'bastien@test.fr', '41aa7ceb301e25f151ad0bd15ee514982968eaa8594ee28bbb06288013969afe', '74aaa8b7fbf4cc3cb6e45ffeaa155045', 'SUPER_ADMIN', '2024-12-08', '2024-12-08', NULL);
+      INSERT INTO "public"."users" ("id", "name", "email", "password", "salt", "role", "createdat", "updatedat", "deletedat") VALUES ('f1579709-9ef2-4e67-95cf-8dcd1509d3db', 'Bastien Dev', 'bastien@test.fr', '41aa7ceb301e25f151ad0bd15ee514982968eaa8594ee28bbb06288013969afe', '74aaa8b7fbf4cc3cb6e45ffeaa155045', 'SUPER_ADMIN', '2024-12-08', '2024-12-08', NULL);
     `)
 
   // Sources, you add more
