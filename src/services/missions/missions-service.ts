@@ -12,3 +12,7 @@ export function getTechnologiesService() {
 export async function createorUpdateMission(mission: MissionAddUpdateModel) {
   await missionsRepositories.createorUpdateMissionDao(mission)
 }
+
+export async function getMissionsService() {
+  return missionsRepositories.getMissionsDao()
+}

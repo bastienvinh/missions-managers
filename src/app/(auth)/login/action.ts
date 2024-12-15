@@ -1,14 +1,14 @@
 'use server'
 
-import { logger } from "@/lib/logger"
 import { signIn, signOut } from "@/services/authentication/auth"
 import { SignInError } from "@/services/authentication/type"
 import { LoginFormSchema } from "@/services/validation/ui/login-form"
 import { AuthError } from "next-auth"
-import { isRedirectError } from "next/dist/client/components/redirect"
+import { redirect } from "next/navigation"
 
 export type FormState = {
   success: boolean
+  init?: boolean
   errors?: {
     email?: string[]
     password?: string[]
@@ -20,7 +20,6 @@ export async function authenticate(
   _currentState: FormState,
   formData: FormData
 ): Promise<FormState> {
-  logger.info('authenticate ...')
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string
@@ -39,14 +38,12 @@ export async function authenticate(
 
   try {
     const user = await signIn('credentials', formData)
-    logger.info('Signin : ', user)
+    console.log(user)
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error
-    }
     const signInError = error as SignInError
+
     if (error instanceof AuthError) {
-      return { success: false, message: `Authentication error.${error.cause?.err}`}
+      return { success: false, message: `Authentication error.${error.message}`}
     }
     if (error) {
       switch (signInError.type) {
@@ -62,10 +59,13 @@ export async function authenticate(
       }
     }
 
-    return {
-      success: false,
-      message: Reflect.get(error as Error, 'message')
-    }
+    // return {
+    //   success: false,
+    //   message: Reflect.get(error as Error, 'message')
+    // }
+    throw error
+  } finally {
+    redirect('/')
   }
 
   return { success: true, message: 'Success user connected' }

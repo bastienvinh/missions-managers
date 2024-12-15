@@ -1,5 +1,4 @@
 import { RoleEnum } from "./type"
-import { logger } from "@/lib/logger"
 import { generateSalt, hashPassword } from "./crypt"
 import { AddUser, User } from "@/types/user-types"
 import { createUserService, getUserEmailService, getUserService, updateUserService } from "../user-service"
@@ -20,8 +19,6 @@ export async function signUp(email: string, password: string, name: string, role
     throw new Error('User already exists')
   }
 
-  logger.info(`Signup: ${email}:${password}`)
-
   const salt = await generateSalt()
   const hashedPassword = await hashPassword(password, salt)
 
@@ -41,7 +38,6 @@ export async function modifyUser(id: string, email: string, password: string, na
   const user = await getUserService(id)
 
   if (!user) {
-    logger.error(`User doesn't exist : ${id}`)
     throw new Error('User doesn\'t exists')
   }
 
@@ -59,11 +55,8 @@ export async function modifyUser(id: string, email: string, password: string, na
       updatedAt: new Date().toISOString()
     })
   } catch {
-    logger.error(`Impossible to modify informations: ${id} : ${email}`)
     throw new Error('Impossible to modify user')
   }
-
-  logger.info(`Change User informations : ${id}: ${email}`)
 }
 
 export const roleHierarchy = [

@@ -1,31 +1,34 @@
 'use client'
 
-import { useActionState, useEffect } from "react"
+import { FormEvent, useActionState, useEffect, useTransition } from "react"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { authenticate } from "@/app/(auth)/login/action"
 import clsx from "clsx"
-import { useFormStatus } from "react-dom"
 import _ from "lodash"
-import { getConnectedUser } from "@/app/dal/user-dal"
-import { redirect } from "next/navigation"
 import { LogIn } from "lucide-react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { toast } from "sonner"
 
 export default function LoginForm({ className }: { className?: string }) {
-  const [actionState, userAction] = useActionState(authenticate, { success: false })
+  const [actionState, userAction] = useActionState(authenticate, { success: false, init: true })
+  const [isPending, startTransition] = useTransition()
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.target as HTMLFormElement
+    startTransition(() => userAction(new FormData(form)))
+  }
 
   useEffect(() => {
-    getConnectedUser().then((user) => {
-      if (user) {
-        redirect('/')
-      }
-    })
-  }, [])
+    // FIXME: fix the toaster
+    if (!isPending && !actionState?.init && !actionState?.success) {
+      toast.error(actionState?.message)
+    }
+  }, [isPending, actionState])
 
-  return <form className={className} action={userAction}>
+  return <form className={className} onSubmit={handleSubmit}>
      <Card>
         <CardHeader>
           <CardTitle> Please Log In</CardTitle>
@@ -58,24 +61,9 @@ export default function LoginForm({ className }: { className?: string }) {
         </CardContent>
         <CardFooter>
           <div className="w-full">
-            <ConnectButton />
+            <Button disabled={isPending} className="w-full" type="submit" variant="outline"><LogIn />Sign In</Button>  
           </div>
         </CardFooter>
       </Card>
   </form>
-}
-
-function ConnectButton() {
-  const {pending} = useFormStatus()
-
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button className="w-full" type="submit" disabled={pending} variant="outline"><LogIn />Sign In</Button>  
-      </TooltipTrigger>
-      <TooltipContent>
-        <div>To connect to the application</div>
-      </TooltipContent>
-    </Tooltip>
-  )
 }

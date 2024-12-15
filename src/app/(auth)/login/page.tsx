@@ -1,8 +1,18 @@
+
+
+import { getConnectedUser } from "@/app/dal/user-dal"
+import LoginForm from "@/components/authentication/login-form"
+import { redirect } from "next/navigation"
+
 export const dynamic = 'force-dynamic'
 
-import LoginForm from "@/components/authentication/login-form"
+export default async function Page() {
+  const user = await getConnectedUser()
 
-export default function Page() {
+  if (user) {
+    redirect('/')
+  }
+
   return (
     <div className="flex justify-center w-full h-full items-center">
       <LoginForm className="w-1/4" />

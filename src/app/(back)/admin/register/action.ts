@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger"
 import { modifyUser, signUp } from "@/services/authentication/auth-service"
 import { RoleEnum } from "@/services/authentication/type"
 import { SignupFormSchema, UpdateUserFormSchema } from "@/services/validation/admin/register-form"
-import { isRedirectError } from "next/dist/client/components/redirect"
+// import { isRedirectError } from "next/dist/client/components/redirect"
 
 export type FormState = {
   success: boolean
@@ -41,8 +41,6 @@ export async function register(
     role
   })
 
-  logger.info('Tentative to register an user')
-
   if (!parsedFields.success) {
     logger.error(`failed to register and user, invalid field: ${JSON.stringify({email, name, password, confirmPassword, role})}`)
     return {
@@ -55,10 +53,6 @@ export async function register(
   try {
     await signUp(email, password, name, role)
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error
-    }
-    logger.error('Register Error : ', error)
     return { success: false, message: `Something went wrong. ${error}`}
   }
 

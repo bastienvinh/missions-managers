@@ -49,3 +49,7 @@ export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
     throw new Error('impossible to insert into database, transaction failed')
   }
 }
+
+export async function getMissionsDao() {
+  return db.query.missions.findMany()
+}
