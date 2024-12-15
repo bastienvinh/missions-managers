@@ -2,15 +2,40 @@
 
 import { MissionDal } from "@/app/dal/missions-dal"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
+import TechnnologiesBadgeList from "./technologies-badge-list"
 
 function descriptionFn(mission: MissionDal) {
-  return mission.description?.slice(0, 150) + '...'
+  return {
+    description: mission.description?.slice(0, 150) + '...',
+    technologies: mission.technologies
+  }
 }
 
 export const columns: ColumnDef<MissionDal>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+  },
   {
     accessorKey: "title",
     header: "Title",
@@ -18,6 +43,14 @@ export const columns: ColumnDef<MissionDal>[] = [
   },
   {
     accessorFn: descriptionFn,
+    cell({ getValue }) {
+      return (
+        <div className="w-full flex gap-2 items-center">
+          <TechnnologiesBadgeList technologies={(getValue() as { technologies: string[] }).technologies} limit={3}  />
+          <span>{(getValue() as { description: string }).description}</span>
+        </div>
+      )
+    },
     header: "Description",
   },
   {

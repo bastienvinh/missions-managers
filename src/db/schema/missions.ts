@@ -39,10 +39,25 @@ export const missionsHasTechnologies = pgTable("missions_has_techonologies", {
 })
 
 export const missionsRelations = relations(missions, ({ many, one }) => ({
-  technologies: many(technologies),
+  technologies: many(missionsHasTechnologies),
   source: one(sources, {
     fields: [missions.sourceId],
     references: [sources.id]
+  })
+}))
+
+export const technologiesHasMissions = relations(technologies, ({ many }) => ({
+  missions: many(missionsHasTechnologies)
+}))
+
+export const missionsToTechnologies = relations(missionsHasTechnologies, ({ one }) => ({
+  mission: one(missions, {
+    fields: [missionsHasTechnologies.missionId],
+    references: [missions.id]
+  }),
+  technology: one(technologies, {
+    fields: [missionsHasTechnologies.technologyId],
+    references: [technologies.id]
   })
 }))
 

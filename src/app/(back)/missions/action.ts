@@ -4,6 +4,7 @@ import { getConnectedUser } from "@/app/dal/user-dal"
 import { createorUpdateMission } from "@/services/missions/missions-service"
 import { MissionFormSchema, MissionSchemaType } from "@/services/validation/ui/mission-form"
 import _ from "lodash"
+import { revalidatePath } from "next/cache"
 
 export type FormState = {
   init?: boolean
@@ -52,6 +53,7 @@ export async function addUpdateMission(
     
     const rawData = _.omit(parsedFields.data, 'url', 'source', 'level', 'expirationDate')
     await createorUpdateMission({ ...rawData, expirationDate: parsedFields.data.expirationDate ?? null, authorId: user?.id, likeLevel: parsedFields.data.level, sourceUrl: parsedFields.data.url, sourceId: parsedFields.data.source })
+    // TODO: Redirect to modify page instead
   } catch (error) {
     return { success: false, message: `Something went wrong. ${(error as Error).name}`}
   }

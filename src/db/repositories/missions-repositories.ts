@@ -59,6 +59,39 @@ export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
   }
 }
 
-export async function getMissionsDao() {
-  return db.query.missions.findMany()
+export async function getMissionsDao(options?: { page?: number, limit?: number, term?: string }) {
+
+  const config: {
+    limit?: number
+    offset?: number
+  } = {}
+
+  if (options?.page && options.limit) {
+    // Calcul the current page
+    const offset = (options.page - 1) * options.limit
+    config.offset = offset
+    config.limit = options.limit 
+  } else if (options?.limit) {
+    config.limit = options.limit
+  }
+
+  return db.query.missions.findMany({
+    ...config,
+    with: {
+      technologies: {
+        with: {
+          technology: true
+        }
+      }
+    },
+    where: _.isEmpty(options?.term)
+      ? undefined
+      // TODO: improve with missing columns
+      : (missions, { like, or }) => or(
+        like(missions.title,`%${options?.term as string}%`), 
+        like(missions.description, `%${options?.term as string}%`),
+        like(missions.company, `%${options?.term as string}%`),
+        like(missions.sourceUrl, `%${options?.term as string}%`)
+      ) 
+  })
 }

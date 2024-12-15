@@ -3,8 +3,6 @@
 import dynamic from "next/dynamic"
 import { getTechnologiesByNameService } from "@/services/missions/missions-service"
 
-// import Select from 'react-select/creatable' 
-
 interface TechnologiesSelectorProps {
   value?: string[]
   onChangeValue?: (source: string[]) => void

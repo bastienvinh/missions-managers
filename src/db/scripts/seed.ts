@@ -31,9 +31,11 @@ const seed = async () => {
 
   // Sources, you add more
   await client.query(`
-    INSERT INTO "source" ("id", "name") VALUES ('cdb87552-e3d6-4064-8c35-bac3d3a26060', 'Other');
-    INSERT INTO "source" ("id", "name") VALUES ('da66d450-70d1-4f0d-a426-6900c9a43bff', 'Linkedin');
-    INSERT INTO "source" ("id", "name") VALUES ('4d1b63d4-7345-4b82-a1d6-e1bdc463c6bb', 'Indeed');
+    INSERT INTO "source" ("name") VALUES ('Other');
+    INSERT INTO "source" ("name") VALUES ('Linkedin');
+    INSERT INTO "source" ("name") VALUES ('Indeed');
+    INSERT INTO "source" ("name") VALUES ('Google');
+    INSERT INTO "source" ("name") VALUES ('Facebook');
   `)
 
   await client.query(`

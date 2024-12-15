@@ -16,7 +16,6 @@ export default function SourceMissions({ source, onSourceChange }: SourceMission
   useEffect(() => {
     getSourcesService().then(sources => {
       setSources(sources)
-      if (onSourceChange) onSourceChange(sources[0].id)
     })
   }, [onSourceChange])
 

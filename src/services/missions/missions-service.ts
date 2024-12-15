@@ -17,6 +17,6 @@ export async function createorUpdateMission(mission: MissionAddUpdateModel) {
   await missionsRepositories.createorUpdateMissionDao(mission)
 }
 
-export async function getMissionsService() {
-  return missionsRepositories.getMissionsDao()
+export async function getMissionsService(options?: { page?: number, limit?: number, term?: string }) {
+  return missionsRepositories.getMissionsDao(options)
 }
