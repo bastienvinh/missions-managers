@@ -19,10 +19,11 @@ export default async function Menu() {
     <SidebarProvider className="h-full">
       <Sidebar>
         <SidebarHeader>
-
+          <SidebarMenu>
+            <SidebarMenuItem><Link href="/">Home</Link></SidebarMenuItem>
+          </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenuButton>Home</SidebarMenuButton>
 
           {/* Main Menu */}
           <SidebarGroup>
@@ -44,7 +45,7 @@ export default async function Menu() {
                       {/* Dashboard */}
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/missions/form">
+                          <Link href="/missions">
                           <span>Dashboard</span>
                           </Link>
                         </SidebarMenuSubButton>

@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from "next/dynamic"
-import useTechnologies from "@/hooks/technologies"
+import { getTechnologiesByNameService } from "@/services/missions/missions-service"
 
 // import Select from 'react-select/creatable' 
 
@@ -15,12 +15,9 @@ interface SelectValueType {
   label: string
 }
 
-const Select = dynamic(() => import('react-select/creatable'), { ssr: false })
+const Select = dynamic(() => import('react-select/async-creatable'), { ssr: false })
 
 export default function TechnologiesSelector({ value, onChangeValue } : TechnologiesSelectorProps) {
-  const { technologies } = useTechnologies()
-
-  const options = technologies.map(techno => ({ value: techno.name, label: techno.name }))
   const values = value ? value.map(val => ({ value: val, label: val })) : []
 
   const customStyles = {
@@ -81,6 +78,11 @@ export default function TechnologiesSelector({ value, onChangeValue } : Technolo
     }),
   }
 
+  async function promiseOptions(term: string) {
+    const technos = await getTechnologiesByNameService(term)
+    return technos.map(techno => ({ value: techno, label: techno }))
+  }
+
   return (
     <Select 
       isMulti
@@ -94,7 +96,7 @@ export default function TechnologiesSelector({ value, onChangeValue } : Technolo
         </div>
       )}
 
-      options={options}
+      loadOptions={promiseOptions}
     />
   )
 }

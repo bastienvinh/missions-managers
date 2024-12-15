@@ -9,6 +9,10 @@ export function getTechnologiesService() {
   return missionsRepositories.getTechnologiesDao()
 }
 
+export function getTechnologiesByNameService(term: string) {
+  return missionsRepositories.getTechnologiesByNameDao(term)
+}
+
 export async function createorUpdateMission(mission: MissionAddUpdateModel) {
   await missionsRepositories.createorUpdateMissionDao(mission)
 }

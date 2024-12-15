@@ -15,6 +15,15 @@ export async function getTechnologiesDao() {
   return db.query.technologies.findMany()
 }
 
+export async function getTechnologiesByNameDao(term: string): Promise<string[]> {
+  return db.query.technologies.findMany({
+    columns: {
+      name: true
+    },
+    where: (technos, { like }) => like(technos.name, `%${term}%`) 
+  }).then(res => res.map(row => row.name))
+}
+
 export async function getTechnologiesByListDao(list: string[]) {
   const result = await db.execute(sql`SELECT json_agg(LOWER("name")) as "result" FROM "technology" WHERE "name" IN (${sql.join(list, sql`, `)})`)
   return result[0].result ?? [] as string[]

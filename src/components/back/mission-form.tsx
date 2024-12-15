@@ -24,6 +24,7 @@ import dayjs from 'dayjs'
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
 import { UpdateMission } from "@/types/missions-types"
+import { useRouter } from "next/navigation"
 
 export default function MissionsForm({mission}: { mission?: UpdateMission }) {
   const form = useForm<MissionSchemaType>({
@@ -46,6 +47,7 @@ export default function MissionsForm({mission}: { mission?: UpdateMission }) {
 
   const [actionState, formAction] = useActionState(addUpdateMission, { init: true, success: false })
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   function onSubmitHandler(data: MissionSchemaType) {
     startTransition(() => formAction(data))
@@ -56,10 +58,11 @@ export default function MissionsForm({mission}: { mission?: UpdateMission }) {
   useEffect(() => {
     if(!isPending && !actionState?.init && actionState?.success) {
       toast.success('Mission Created')
+      router.refresh()
     } else if (!isPending && !actionState?.init && !actionState?.success) {
       toast.error('Failed Data Insertion')
     }
-  }, [isPending, actionState, form])
+  }, [isPending, actionState, form, router])
 
   return (
     <Form {...form}>
