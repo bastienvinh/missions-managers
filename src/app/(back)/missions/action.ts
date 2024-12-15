@@ -4,7 +4,6 @@ import { getConnectedUser } from "@/app/dal/user-dal"
 import { createorUpdateMission } from "@/services/missions/missions-service"
 import { MissionFormSchema, MissionSchemaType } from "@/services/validation/ui/mission-form"
 import _ from "lodash"
-import { revalidatePath } from "next/cache"
 
 export type FormState = {
   init?: boolean
