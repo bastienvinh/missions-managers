@@ -66,7 +66,6 @@ VALUES
     ('Groovy', 'Dynamic and reflective programming language for the Java platform.', 22),
     ('TypeScript', 'Superset of JavaScript for large-scale application development.', 23),
     ('Lua', 'Lightweight scripting language designed for embedding into applications.', 24),
-    ('Go (Golang)', 'A statically-typed language designed at Google by Robert Griesmer and Rob Pike for system programming.', 25),
     ('Erlang', 'Functional programming language used in telecommunications and real-time systems.', 26),
     ('MATLAB', 'Numerical computing environment and programming language developed by MathWorks.', 27),
     ('Pascal', 'High-level, procedural programming language designed for cross-platform development.', 28),
@@ -74,29 +73,12 @@ VALUES
     ('Smalltalk', 'Object-oriented programming language created at Xerox PARC in the 1970s.', 30),
     ('FORTRAN (Fortran)', 'High-level programming language used for scientific and engineering calculations.', 31),
     ('Julia', 'High-level, high-performance programming language.', 32),
-    ('MATLAB', 'Numerical computing environment and programming language developed by MathWorks.', 33),
     ('R', 'Programming language and software environment for statistical computing and graphics.', 34),
-    ('Julia', 'High-level, high-performance programming language.', 35),
-    ('Swift', 'An programming language developed by Apple Inc. for iOS, macOS, watchOS, and tvOS.', 36),
     ('Elm', 'Functional programming language for web applications.', 37),
     ('F#', 'Multilingual, functional-first programming language designed to integrate with .NET framework.', 38),
     ('Lisp (Common Lisp)', 'General-purpose, high-level programming language first implemented in 1958.', 39),
-    ('Scala', 'Multilingual static type system for functional programming using the Java Virtual Machine.', 40),
     ('Haxe', 'High-level, multi-paradigm programming language for game development.', 41),
-    ('Kotlin', 'A statically typed programming language for the JVM.', 42),
-    ('Go (Golang)', 'A statically-typed language designed at Google by Robert Griesmer and Rob Pike for system programming.', 43),
-    ('C++', 'General-purpose, high-level programming language developed by Bjarne Stroustrup in 1985.', 44),
-    ('Rust', 'Systems programming language that focuses on safety, concurrency, memory safety, and low-level control.', 45),
-    ('Clojure', 'Lisp-based programming language that provides a unique approach to software development.', 46),
-    ('Erlang', 'Functional programming language used in telecommunications and real-time systems.', 47),
-    ('MATLAB', 'Numerical computing environment and programming language developed by MathWorks.', 48),
-    ('Haskell', 'A strictly typed, purely functional programming language.', 49),
-    ('F#', 'Multilingual, functional-first programming language designed to integrate with .NET framework.', 50),
-    ('Prolog', 'Logic programming language developed in the 1970s.', 51),
-    ('D', 'General-purpose, imperative programming language developed by Digital Mars and improved by Chris Lattner at Apple Inc.', 52),
-    ('Elm', 'Functional programming language for web applications.', 53),
-    ('C#', 'General-purpose, object-oriented programming language developed by Microsoft.', 54),
-    ('Julia', 'High-level, high-performance programming language.', 55);
+    ('D', 'General-purpose, imperative programming language developed by Digital Mars and improved by Chris Lattner at Apple Inc.', 52);
     
   `)
 

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTable } from "./data-table"
-import { columns } from "./columns"
+import { getColumnsDefinitions } from "./columns"
 import useMissions from "@/hooks/missions"
 import { Label } from "@/components/ui/label"
 import React, { useState } from "react"
@@ -66,7 +66,7 @@ export default function Page() {
     <div className="grid grid-rows-[auto_auto_1fr] gap-5 p-5">
       <div>
         <h1 className="text-2xl">Missions</h1>
-        <div className="">Here's a list of your missions</div>
+        <div>Here's a list of your missions</div>
       </div>
       <div className="flex gap-2">
         <div className="w-full flex gap-2 justify-between">
@@ -87,7 +87,7 @@ export default function Page() {
         </div>
       </div>
       <div className="w-full">
-        <DataTable selectionState={rowSelectionState} onSelectionChange={setRowSelectionState} columns={columns} data={missions} />
+        <DataTable selectionState={rowSelectionState} onSelectionChange={setRowSelectionState} columns={getColumnsDefinitions({ refresh })} data={missions} />
       </div>
     </div>
   )
