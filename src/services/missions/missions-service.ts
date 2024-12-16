@@ -20,3 +20,7 @@ export async function createorUpdateMission(mission: MissionAddUpdateModel) {
 export async function getMissionsService(options?: { page?: number, limit?: number, term?: string }) {
   return missionsRepositories.getMissionsDao(options)
 }
+
+export async function destroyMissionsService(ids: string[]) {
+  return missionsRepositories.destroyMissionsDao(ids)
+}

@@ -49,7 +49,7 @@ export async function addUpdateMission(
     if (!user) {
       throw new Error('Impossible to detect author')
     }
-    
+
     const rawData = _.omit(parsedFields.data, 'url', 'source', 'level', 'expirationDate')
     await createorUpdateMission({ ...rawData, expirationDate: parsedFields.data.expirationDate ?? null, authorId: user?.id, likeLevel: parsedFields.data.level, sourceUrl: parsedFields.data.url, sourceId: parsedFields.data.source })
     // TODO: Redirect to modify page instead

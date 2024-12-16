@@ -1,6 +1,6 @@
 'use server'
 
-import { sql } from "drizzle-orm"
+import { sql, inArray } from "drizzle-orm"
 import db from "../schema"
 import { MissionAddUpdateModel, missions, missionsHasTechnologies, technologies, TechnologyModel } from "../schema/missions"
 import _ from "lodash"
@@ -48,13 +48,11 @@ export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
 
       }
       catch (error) {
-        console.log(error)
         throw new Error('Transaction Error')
       }
     })
   }
   catch (error) {
-    console.log(error)
     throw new Error('impossible to insert into database, transaction failed')
   }
 }
@@ -94,4 +92,20 @@ export async function getMissionsDao(options?: { page?: number, limit?: number, 
         like(missions.sourceUrl, `%${options?.term as string}%`)
       ) 
   })
+}
+
+export async function destroyMissionsDao(ids: string[]) {
+  try {
+    db.transaction(async tx => {
+      try {
+        await tx.delete(missionsHasTechnologies).where(inArray(missionsHasTechnologies.missionId, ids))
+        await tx.delete(missions).where(inArray(missions.id, ids))
+      } catch (error) {
+        tx.rollback()
+        throw error
+      }
+    })
+  } catch {
+    throw new Error('impossible to delete into database, transaction failed')
+  }
 }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { Banknote, BriefcaseBusiness, Building2, MoreHorizontal, SquareMenu } from "lucide-react"
 import TechnnologiesBadgeList from "./technologies-badge-list"
 
 function descriptionFn(mission: MissionDal) {
@@ -38,8 +38,8 @@ export const columns: ColumnDef<MissionDal>[] = [
   },
   {
     accessorKey: "title",
-    header: "Title",
-    size: 300
+    header: () => <div className="flex gap-2 items-center"><BriefcaseBusiness />Title</div>,
+    minSize: 500
   },
   {
     accessorFn: descriptionFn,
@@ -55,14 +55,15 @@ export const columns: ColumnDef<MissionDal>[] = [
   },
   {
     accessorKey: "company",
-    header: "Company",
+    header: () => (<div className="flex gap-2 items-center"><Building2 /> Company</div>),
   },
   {
     accessorKey: "salary",
-    header: "Salary"
+    header: () => (<div className="flex gap-2 items-center"><Banknote />Salary</div>)
   },
   {
     id: 'actions',
+    header: () => (<SquareMenu />),
     cell: () => {
       return (
         <DropdownMenu>
