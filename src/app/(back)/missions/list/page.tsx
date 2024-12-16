@@ -75,20 +75,24 @@ export default function Page() {
       </div>
       <div className="flex gap-2">
         <div className="w-full flex gap-2 justify-between">
-          <div className="flex gap-4 items-center w-1/4">
-            <Label htmlFor="search-missions" className="whitespace-nowrap">Search :</Label>
-            <Input onChange={handleInputChange} placeholder="C#, Java, Developer, ..." className="grow" id="search-missions" type="search" />
+          <div className="flex gap-4 w-fit">
+            <div className="flex gap-2 items-center">
+              <Label htmlFor="search-missions" className="whitespace-nowrap">Search :</Label>
+              <Input onChange={handleInputChange} placeholder="C#, Java, Developer, ..." className="grow" id="search-missions" type="search" />
+            </div>
+
+            <div className="flex gap-4">
+              {!!selectedValue.length && <div className="border border-gray-800 rounded py-1 px-2 flex items-center gap-2">
+                <span>
+                  actions
+                </span>
+                <div>
+                  <AlertConfirmDelete refresh={refresh} deletedRows={selectedValue} />
+                </div>
+              </div>}
+            </div>
           </div>
-          <div className="flex gap-4">
-            {!!selectedValue.length && <div className="border border-gray-800 rounded p-2 flex gap-2">
-              <span>
-                actions
-              </span>
-              <div>
-                <AlertConfirmDelete refresh={refresh} deletedRows={selectedValue} />
-              </div>
-            </div>}
-          </div>
+          
           <div className="flex">
             <Button onClick={addNew} variant="outline">New Mission</Button>
           </div>

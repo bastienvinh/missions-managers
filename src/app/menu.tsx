@@ -4,7 +4,7 @@ import { getConnectedUser } from "./dal/user-dal"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider } from "@/components/ui/sidebar"
 import SideBarFooterNavigation from "@/components/sidebar-footer-navigation"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { ChevronRight, StickyNote } from "lucide-react"
+import { ChartNoAxesCombined, ChevronRight, ClipboardList, House, LayoutDashboard, SquarePlus, StickyNote, Users } from "lucide-react"
 import Link from "next/link"
 import { hasRequiredRole } from "./dal/user-dal.utils"
 import { RoleEnum } from "@/services/authentication/type"
@@ -22,7 +22,11 @@ export default async function Menu() {
       <Sidebar>
         <SidebarHeader>
           <SidebarMenu>
-            <SidebarMenuItem><Link href="/">Home</Link></SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href="/">
+                <span className="flex gap-1 items-center"><House />Home</span>
+              </Link>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
@@ -35,8 +39,10 @@ export default async function Menu() {
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton tooltip="mission">
-                      <StickyNote />
-                      <span>Missions</span>
+                      <div className="flex gap-1 items-center">
+                        <StickyNote />
+                        <span>Missions</span>
+                      </div>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -48,7 +54,7 @@ export default async function Menu() {
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
                           <Link href="/missions">
-                          <span>Dashboard</span>
+                            <span className="flex gap-1 items-center"><LayoutDashboard />Dashboard</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -56,7 +62,7 @@ export default async function Menu() {
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
                           <Link href="/missions/list">
-                          <span>List</span>
+                            <span className="flex gap-1 items-center"><ClipboardList />List</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -65,7 +71,7 @@ export default async function Menu() {
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
                           <Link href="/missions/form">
-                          <span>New Mission</span>
+                            <span className="flex gap-1 items-center"><SquarePlus />New Mission</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -83,7 +89,9 @@ export default async function Menu() {
             <SidebarMenu>
               <SidebarMenu>
                 <SidebarMenuButton>
-                  <Link href="/stats">Statistics</Link>
+                  <Link href="/stats">
+                    <span className="flex gap-1 items-center"><ChartNoAxesCombined />Statistics</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenu>
             </SidebarMenu>
@@ -96,7 +104,9 @@ export default async function Menu() {
             <SidebarMenu>
               <SidebarMenu>
                 <SidebarMenuButton>
-                  <Link href="/users">Users</Link>
+                  <Link href="/users">
+                    <span className="flex gap-1 items-center"><Users />Users</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenu>
             </SidebarMenu>
