@@ -11,6 +11,7 @@ import { RowSelectionState } from "@tanstack/react-table"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
+import { redirect } from "next/navigation"
 
 /* eslint-disable react/no-unescaped-entities */
 export const dynamic = 'force-dynamic'
@@ -62,6 +63,10 @@ export default function Page() {
 
   const selectedValue = Object.keys(rowSelectionState)
 
+  function addNew() {
+    redirect('/missions/form')
+  }
+
   return (
     <div className="grid grid-rows-[auto_auto_1fr] gap-5 p-5">
       <div>
@@ -83,6 +88,9 @@ export default function Page() {
                 <AlertConfirmDelete refresh={refresh} deletedRows={selectedValue} />
               </div>
             </div>}
+          </div>
+          <div className="flex">
+            <Button onClick={addNew} variant="outline">New Mission</Button>
           </div>
         </div>
       </div>

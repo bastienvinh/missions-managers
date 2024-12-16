@@ -6,6 +6,8 @@ import SideBarFooterNavigation from "@/components/sidebar-footer-navigation"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ChevronRight, StickyNote } from "lucide-react"
 import Link from "next/link"
+import { hasRequiredRole } from "./dal/user-dal.utils"
+import { RoleEnum } from "@/services/authentication/type"
 
 export default async function Menu() {
 
@@ -51,19 +53,19 @@ export default async function Menu() {
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
 
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <Link href="/missions/list">
+                          <span>List</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+
                       {/* new missions */}
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
                           <Link href="/missions/form">
                           <span>New Mission</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton asChild>
-                          <Link href="/missions/list">
-                          <span>Lists</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -86,6 +88,20 @@ export default async function Menu() {
               </SidebarMenu>
             </SidebarMenu>
           </SidebarGroup>
+
+
+          {/* Settings */}
+          {hasRequiredRole(user, RoleEnum.ADMIN) && <SidebarGroup>
+            <SidebarGroupLabel>Manage</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenu>
+                <SidebarMenuButton>
+                  <Link href="/users">Users</Link>
+                </SidebarMenuButton>
+              </SidebarMenu>
+            </SidebarMenu>
+          </SidebarGroup>}
+          
 
         </SidebarContent>
         <SidebarFooter>

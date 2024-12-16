@@ -59,8 +59,10 @@ export default function SideBarFooterNavigation({ user }: { user: UserDTO }) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Github
+                <a className="flex gap-1 items-center" href="https://github.com/bastienvinh">
+                  <Sparkles />
+                  Github
+                </a>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
