@@ -52,6 +52,8 @@ function AlertConfirmDelete({ deletedRows, refresh }: { deletedRows: string[], r
   )
 }
 
+// TODO: persist the filters in local storage
+
 export const dynamic = 'force-dynamic'
 
 export default function Page() {
@@ -70,6 +72,11 @@ export default function Page() {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTerm(event.target.value)
   }
+
+  // We back to page one when a filter is rendered
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [term, filteredCompanies, filteredTechnologies, rowsPerPage])
 
   useEffect(() => {
     setOptions({ term, page: currentPage, limit: rowsPerPage, filter: { companies: filteredCompanies, technologies: filteredTechnologies } })
