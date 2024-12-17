@@ -1,6 +1,6 @@
 'use server'
 
-import { sql, inArray, eq, or, like } from "drizzle-orm"
+import { sql, inArray, eq, or, like, and } from "drizzle-orm"
 import db from "../schema"
 import { MissionAddUpdateModel, missions, missionsHasTechnologies, technologies, TechnologyModel } from "../schema/missions"
 import _ from "lodash"
@@ -73,26 +73,28 @@ function withBaseFilterCriterias<T extends PgSelect>(query: T, options?: GetMiss
     .leftJoin(missionsHasTechnologies, eq(missions.id, missionsHasTechnologies.missionId))
     .leftJoin(technologies, eq(missionsHasTechnologies.technologyId, technologies.id))
 
+  const args = []
+
   if (options?.filter?.companies?.length) {
-    query.where(inArray(missions.company, options.filter.companies))
+    args.push(inArray(missions.company, options.filter.companies))
   }
 
   if (options?.filter?.technologies?.length) {
-    query.where(inArray(technologies.id, options.filter.technologies))
+    args.push(inArray(technologies.id, options.filter.technologies))
   }
 
-  return query
-}
-
-function withSearch<T extends PgSelect>(query: T, options?: GetMissionParameters) {
   if (options?.term?.trim().length) {
-    query.where(or(
+    args.push(or(
       like(missions.title, `%${options.term}%`),
       like(missions.description, `%${options.term}%`),
       like(missions.company, `%${options.term}%`),
       like(missions.sourceUrl, `%${options.term}%`)
       // TODO: add more criteria
     ))
+  }
+
+  if (args.length) {
+    query.where(and(...args))
   }
 
   return query
@@ -119,8 +121,7 @@ export async function getMissionsDao(options?: GetMissionParameters) {
   })
   .from(missions).$dynamic()
 
-  let finalCountQuery = withBaseFilterCriterias(countQuery, options)
-  finalCountQuery = withSearch(finalCountQuery, options)
+  const finalCountQuery = withBaseFilterCriterias(countQuery, options)
 
   const query = db.select({
     ..._.omit(missions, 'getSQL', '$inferInsert', '$inferSelect', '_', 'shouldOmitSQLParens', 'enableRLS'),
@@ -128,7 +129,6 @@ export async function getMissionsDao(options?: GetMissionParameters) {
   }).from(missions).groupBy(missions.id).$dynamic()
 
   let finalQuery = withBaseFilterCriterias(query, options)
-  finalQuery = withSearch(finalQuery, options)
   finalQuery = withPage(finalQuery, options)
 
   const result = await finalQuery.execute()
