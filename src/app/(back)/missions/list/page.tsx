@@ -13,6 +13,8 @@ import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
 import { redirect } from "next/navigation"
 import CompaniesCombobox from "./companies-combobox"
+import Pagination from "./pagination"
+import _ from "lodash"
 
 function AlertConfirmDelete({ deletedRows, refresh }: { deletedRows: string[], refresh: () => void }) {
 
@@ -53,24 +55,37 @@ export const dynamic = 'force-dynamic'
 
 export default function Page() {
 
-  const [rowSelectionState] = useState<RowSelectionState>({})
+  const [rowSelectionState, setRowSelectionState] = useState<RowSelectionState>({})
   const [filteredCompanies, setFilteredCompanies] = useState<string[]>([])
   const [term, setTerm] = useState("")
   const [options, setOptions] = useState<UseMissionsOptions>({ term, page: 1, limit: 15 })
-  const { missions, refresh } = useMissions(options)
+  const { missions, refresh, total } = useMissions(options)
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(15)
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTerm(event.target.value)
   }
 
   useEffect(() => {
-    setOptions({ term, page: 1, limit: 15, filter: { companies: filteredCompanies } })
-  }, [term, filteredCompanies])
+    setOptions({ term, page: currentPage, limit: rowsPerPage, filter: { companies: filteredCompanies } })
+  }, [term, filteredCompanies, currentPage, rowsPerPage])
 
   const selectedValue = Object.keys(rowSelectionState)
+  const totalPage = _.ceil(total / rowsPerPage, 0)
 
   function addNew() {
     redirect('/missions/form')
+  }
+
+  function pageChangeHandler(page: number) {
+    setCurrentPage(page)
+  }
+
+  function rowsPerPagesChangeHandler(perPage: number) {
+    setRowsPerPage(perPage)
   }
 
   return (
@@ -107,8 +122,9 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="w-full">
-          <DataTable selectionState={rowSelectionState} columns={getColumnsDefinitions({ refresh })} data={missions} />
+        <div className="w-full flex flex-col gap-2">
+          <DataTable onSelectionChange={setRowSelectionState} selectionState={rowSelectionState} columns={getColumnsDefinitions({ refresh })} data={missions} />
+          <Pagination onPageChange={pageChangeHandler} onRowsPerPageChange={rowsPerPagesChangeHandler} selectedRows={selectedValue.length}  currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={total} totalPages={totalPage}  />
         </div>
       </div>
     </div>

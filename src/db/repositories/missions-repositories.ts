@@ -7,6 +7,14 @@ import _ from "lodash"
 
 import { v4 as uuid } from 'uuid'
 import { MissionFilter } from "@/services/missions/type"
+import { PgSelect } from "drizzle-orm/pg-core"
+
+
+interface GetMissionParameters {
+  page?: number,
+  limit?: number,term?: string,
+  filter?: MissionFilter
+}
 
 export async function getSourcesDao() {
   return db.query.sources.findMany()
@@ -58,30 +66,21 @@ export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
   }
 }
 
-export async function getMissionsDao(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }) {
+// #region Dynamic Queries
 
-  const query = db
-    .select({
-      ..._.omit(missions, 'getSQL', '$inferInsert', '$inferSelect', '_', 'shouldOmitSQLParens', 'enableRLS'),
-      technologies: sql<string[]>`COALESCE(array_agg("name") FILTER (WHERE "name" IS NOT NULL), ARRAY[]::text[])`
-    })
-    .from(missions)
+function withBaseFilterCriterias<T extends PgSelect>(query: T, options?: GetMissionParameters) {
+  query
     .leftJoin(missionsHasTechnologies, eq(missions.id, missionsHasTechnologies.missionId))
     .leftJoin(technologies, eq(missionsHasTechnologies.technologyId, technologies.id))
-    .groupBy(missions.id).$dynamic()
 
   if (options?.filter?.companies?.length) {
     query.where(inArray(missions.company, options.filter.companies))
   }
 
-  if (options?.page && options.limit) {
-    const offset = (options.page - 1) * options.limit
-    query.offset(offset)
-    query.limit(options.limit)
-  } else if (options?.limit) {
-    query.limit(options.limit)
-  }
+  return query
+}
 
+function withSearch<T extends PgSelect>(query: T, options?: GetMissionParameters) {
   if (options?.term?.trim().length) {
     query.where(or(
       like(missions.title, `%${options.term}%`),
@@ -92,7 +91,49 @@ export async function getMissionsDao(options?: { page?: number, limit?: number, 
     ))
   }
 
-  return query.execute()
+  return query
+}
+
+function withPage<T extends PgSelect>(query: T, options?: GetMissionParameters) {
+  if (options?.page && options.limit) {
+    const offset = (options.page - 1) * options.limit
+    query.offset(offset)
+    query.limit(options.limit)
+  } else if (options?.limit) {
+    query.limit(options.limit)
+  }
+
+  return query
+}
+
+// #endregion
+
+export async function getMissionsDao(options?: GetMissionParameters) {
+
+  const countQuery = db.select({
+    count: sql<number>`COUNT(DISTINCT mission."id")`
+  })
+  .from(missions).$dynamic()
+
+  let finalCountQuery = withBaseFilterCriterias(countQuery, options)
+  finalCountQuery = withSearch(finalCountQuery, options)
+
+  const query = db.select({
+    ..._.omit(missions, 'getSQL', '$inferInsert', '$inferSelect', '_', 'shouldOmitSQLParens', 'enableRLS'),
+    technologies: sql<string[]>`COALESCE(array_agg("name") FILTER (WHERE "name" IS NOT NULL), ARRAY[]::text[])`,
+  }).from(missions).groupBy(missions.id).$dynamic()
+
+  let finalQuery = withBaseFilterCriterias(query, options)
+  finalQuery = withSearch(finalQuery, options)
+  finalQuery = withPage(finalQuery, options)
+
+  const result = await finalQuery.execute()
+  const total = await finalCountQuery.execute().then(res => res[0].count)
+
+  return {
+    result,
+    total
+  }
 }
 
 export async function destroyMissionsDao(ids: string[]) {

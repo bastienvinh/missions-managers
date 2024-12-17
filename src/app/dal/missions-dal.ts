@@ -8,9 +8,6 @@ export type MissionDal = Omit<Mission, 'technologies'> & {
   technologies: string[]
 }
 
-export async function getMissionsDal(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }): Promise<MissionDal[]> {
-
-  // we gonna to transform to be usesable
-
+export async function getMissionsDal(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }): Promise<{result: MissionDal[], total: number}> {
   return getMissionsService(options)
 }
