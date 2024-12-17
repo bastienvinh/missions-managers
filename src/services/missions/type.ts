@@ -6,3 +6,9 @@ export enum ContractEnum {
   Internship = "Internship",
   Others = "Others"
 }
+
+
+export interface MissionFilter {
+  companies?: string[]
+  salary?: { min?: number, max?: number }
+}

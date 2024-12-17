@@ -1,11 +1,12 @@
 'use server'
 
-import { sql, inArray } from "drizzle-orm"
+import { sql, inArray, eq } from "drizzle-orm"
 import db from "../schema"
 import { MissionAddUpdateModel, missions, missionsHasTechnologies, technologies, TechnologyModel } from "../schema/missions"
 import _ from "lodash"
 
 import { v4 as uuid } from 'uuid'
+import { MissionFilter } from "@/services/missions/type"
 
 export async function getSourcesDao() {
   return db.query.sources.findMany()
@@ -57,41 +58,31 @@ export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
   }
 }
 
-export async function getMissionsDao(options?: { page?: number, limit?: number, term?: string }) {
+export async function getMissionsDao(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }) {
 
-  const config: {
-    limit?: number
-    offset?: number
-  } = {}
+  const query = db
+    .select({
+      ..._.omit(missions, 'getSQL', '$inferInsert', '$inferSelect', '_', 'shouldOmitSQLParens', 'enableRLS'),
+      technologies: sql<string[]>`COALESCE(array_agg("name") FILTER (WHERE "name" IS NOT NULL), ARRAY[]::text[])`
+    })
+    .from(missions)
+    .leftJoin(missionsHasTechnologies, eq(missions.id, missionsHasTechnologies.missionId))
+    .leftJoin(technologies, eq(missionsHasTechnologies.technologyId, technologies.id))
+    .groupBy(missions.id).$dynamic()
 
-  if (options?.page && options.limit) {
-    // Calcul the current page
-    const offset = (options.page - 1) * options.limit
-    config.offset = offset
-    config.limit = options.limit 
-  } else if (options?.limit) {
-    config.limit = options.limit
+  if (options?.filter?.companies?.length) {
+    query.where(inArray(missions.company, options.filter.companies))
   }
 
-  return db.query.missions.findMany({
-    ...config,
-    with: {
-      technologies: {
-        with: {
-          technology: true
-        }
-      }
-    },
-    where: _.isEmpty(options?.term)
-      ? undefined
-      // TODO: improve with missing columns
-      : (missions, { like, or }) => or(
-        like(missions.title,`%${options?.term as string}%`), 
-        like(missions.description, `%${options?.term as string}%`),
-        like(missions.company, `%${options?.term as string}%`),
-        like(missions.sourceUrl, `%${options?.term as string}%`)
-      ) 
-  })
+  if (options?.page && options.limit) {
+    const offset = (options.page - 1) * options.limit
+    query.offset(offset)
+    query.limit(options.limit)
+  } else if (options?.limit) {
+    query.limit(options.limit)
+  }
+
+  return query.execute()
 }
 
 export async function destroyMissionsDao(ids: string[]) {
@@ -108,4 +99,11 @@ export async function destroyMissionsDao(ids: string[]) {
   } catch {
     throw new Error('impossible to delete into database, transaction failed')
   }
+}
+
+export async function getCompaniesDao() {
+  return db.selectDistinct({ company: missions.company })
+    .from(missions)
+    .orderBy(missions.company)
+    .then(res => res.filter(row => row.company !== null).map<string>(row => row.company ?? ''))
 }
