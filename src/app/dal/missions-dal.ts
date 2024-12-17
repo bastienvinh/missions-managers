@@ -4,10 +4,10 @@ import { Mission } from "@/types/missions-types"
 import _ from "lodash"
 
 
-export type MissionDal = Omit<Mission, 'technologies'> & {
+export type MissionDTO = Omit<Mission, 'technologies'> & {
   technologies: string[]
 }
 
-export async function getMissionsDal(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }): Promise<{result: MissionDal[], total: number}> {
+export async function getMissionsDal(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }): Promise<{result: MissionDTO[], total: number}> {
   return getMissionsService(options)
 }

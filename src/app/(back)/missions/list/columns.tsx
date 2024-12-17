@@ -1,16 +1,17 @@
 'use client'
 
-import { MissionDal } from "@/app/dal/missions-dal"
+import { MissionDTO } from "@/app/dal/missions-dal"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
-import { Banknote, BriefcaseBusiness, Building2, MoreHorizontal, SquareMenu } from "lucide-react"
+import { Banknote, BriefcaseBusiness, Building2, MoreHorizontal, Pencil, SquareMenu, Trash2 } from "lucide-react"
 import TechnnologiesBadgeList from "./technologies-badge-list"
 import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
+import DetailMission from "./detail-mission"
 
-function descriptionFn(mission: MissionDal) {
+function descriptionFn(mission: MissionDTO) {
   return {
     description: mission.description?.slice(0, 150) + '...',
     technologies: mission.technologies
@@ -22,7 +23,7 @@ async function deleteMission(id: string) {
   toast.success('Success deleted mission')
 }
 
-export function getColumnsDefinitions({ refresh }: { refresh: () => void }): ColumnDef<MissionDal>[] {
+export function getColumnsDefinitions({ refresh }: { refresh: () => void }): ColumnDef<MissionDTO>[] {
 
   async function handleDelete(id: string) {
     await deleteMission(id)
@@ -83,14 +84,17 @@ export function getColumnsDefinitions({ refresh }: { refresh: () => void }): Col
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Open menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>Modify</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(row.original.id)} className="text-red-500">Delete</DropdownMenuItem>
+              <DropdownMenuItem>
+                <DetailMission mission={row.original} />
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-1"><Pencil /> Modify</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(row.original.id)} className="text-red-500 flex gap-1"><Trash2 /> Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
