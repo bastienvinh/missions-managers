@@ -77,6 +77,10 @@ function withBaseFilterCriterias<T extends PgSelect>(query: T, options?: GetMiss
     query.where(inArray(missions.company, options.filter.companies))
   }
 
+  if (options?.filter?.technologies?.length) {
+    query.where(inArray(technologies.id, options.filter.technologies))
+  }
+
   return query
 }
 

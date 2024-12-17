@@ -1,7 +1,7 @@
 import { getMissionsDal, MissionDal } from "@/app/dal/missions-dal"
 import { useEffect, useState } from "react"
 
-export interface UseMissionsOptions { term: string, page: number, limit: number, filter?: { companies?: string[] } }
+export interface UseMissionsOptions { term: string, page: number, limit: number, filter?: { companies?: string[], technologies?: string[] } }
 
 export default function useMissions(options?: UseMissionsOptions) {
   const [missions, setMissions] = useState<MissionDal[]>([])

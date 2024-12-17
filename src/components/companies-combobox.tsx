@@ -60,9 +60,9 @@ export default function CompaniesCombobox({ onSelectedChange, selected }: Compan
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder="Search company..." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No company found.</CommandEmpty>
             <CommandGroup>
               {companies.map((company, index) => (
                 <CommandItem onSelect={() => handleSelectCompany(company)} className="flex justify-between" key={index}>

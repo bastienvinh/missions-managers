@@ -11,4 +11,5 @@ export enum ContractEnum {
 export interface MissionFilter {
   companies?: string[]
   salary?: { min?: number, max?: number }
+  technologies?: string[]
 }

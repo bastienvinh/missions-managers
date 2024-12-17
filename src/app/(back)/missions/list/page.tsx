@@ -12,9 +12,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
 import { redirect } from "next/navigation"
-import CompaniesCombobox from "./companies-combobox"
+import CompaniesCombobox from "../../../../components/companies-combobox"
 import Pagination from "./pagination"
 import _ from "lodash"
+import TechnologiesCombobox from "@/components/technologies-combobox"
 
 function AlertConfirmDelete({ deletedRows, refresh }: { deletedRows: string[], refresh: () => void }) {
 
@@ -57,6 +58,7 @@ export default function Page() {
 
   const [rowSelectionState, setRowSelectionState] = useState<RowSelectionState>({})
   const [filteredCompanies, setFilteredCompanies] = useState<string[]>([])
+  const [filteredTechnologies, setFilteredTechnologies] = useState<string[]>([])
   const [term, setTerm] = useState("")
   const [options, setOptions] = useState<UseMissionsOptions>({ term, page: 1, limit: 15 })
   const { missions, refresh, total } = useMissions(options)
@@ -70,8 +72,8 @@ export default function Page() {
   }
 
   useEffect(() => {
-    setOptions({ term, page: currentPage, limit: rowsPerPage, filter: { companies: filteredCompanies } })
-  }, [term, filteredCompanies, currentPage, rowsPerPage])
+    setOptions({ term, page: currentPage, limit: rowsPerPage, filter: { companies: filteredCompanies, technologies: filteredTechnologies } })
+  }, [term, filteredCompanies, filteredTechnologies, currentPage, rowsPerPage])
 
   const selectedValue = Object.keys(rowSelectionState)
   const totalPage = _.ceil(total / rowsPerPage, 0)
@@ -86,6 +88,12 @@ export default function Page() {
 
   function rowsPerPagesChangeHandler(perPage: number) {
     setRowsPerPage(perPage)
+  }
+
+  function clearFiltersHandler() {
+    setRowSelectionState({})
+    setFilteredCompanies([])
+    setFilteredTechnologies([])
   }
 
   return (
@@ -107,12 +115,14 @@ export default function Page() {
               <div className="flex gap-4">
                 <div className="border border-gray-800 rounded py-1 px-2 flex items-center gap-2">
                   <span>
-                    Filterrs
+                    Filters
                   </span>
                   <CompaniesCombobox selected={filteredCompanies} onSelectedChange={setFilteredCompanies} />
+                  <TechnologiesCombobox selected={filteredTechnologies} onSelectedChange={setFilteredTechnologies} />
                   {!!selectedValue.length && <div>
                     <AlertConfirmDelete refresh={refresh} deletedRows={selectedValue} />
                   </div>}
+                  <Button onClick={clearFiltersHandler} variant="outline" className="py-0 h-7">Clear filter</Button>
                 </div>
               </div>
             </div>
