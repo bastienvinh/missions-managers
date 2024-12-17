@@ -92,7 +92,7 @@ export default function Page() {
               <div className="flex gap-4">
                 <div className="border border-gray-800 rounded py-1 px-2 flex items-center gap-2">
                   <span>
-                    actions
+                    Filterrs
                   </span>
                   <CompaniesCombobox selected={filteredCompanies} onSelectedChange={setFilteredCompanies} />
                   {!!selectedValue.length && <div>

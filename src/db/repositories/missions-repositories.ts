@@ -1,6 +1,6 @@
 'use server'
 
-import { sql, inArray, eq } from "drizzle-orm"
+import { sql, inArray, eq, or, like } from "drizzle-orm"
 import db from "../schema"
 import { MissionAddUpdateModel, missions, missionsHasTechnologies, technologies, TechnologyModel } from "../schema/missions"
 import _ from "lodash"
@@ -80,6 +80,16 @@ export async function getMissionsDao(options?: { page?: number, limit?: number, 
     query.limit(options.limit)
   } else if (options?.limit) {
     query.limit(options.limit)
+  }
+
+  if (options?.term?.trim().length) {
+    query.where(or(
+      like(missions.title, `%${options.term}%`),
+      like(missions.description, `%${options.term}%`),
+      like(missions.company, `%${options.term}%`),
+      like(missions.sourceUrl, `%${options.term}%`)
+      // TODO: add more criteria
+    ))
   }
 
   return query.execute()
