@@ -1,5 +1,5 @@
 import {relations, sql} from 'drizzle-orm'
-import { boolean, doublePrecision, integer, pgEnum, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { boolean, date, doublePrecision, integer, pgEnum, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { users } from './users'
 
 export const contractTypes = pgEnum("contract_types", ["Fulltime", "Permanent", "Temporary", "PartTime", "Internship", "Others"])
@@ -22,6 +22,8 @@ export const missions = pgTable('mission', {
   analytics: boolean('analytics').default(true),
   sourceUrl: varchar('source_url'),
   sourceId: uuid("source_id").notNull().references(() => sources.id),
+  createdAt: date("created_at").notNull().default(sql`NOW()`),
+  updatedAt: date("updated_at").notNull().default(sql`NOW()`)
 })
 
 export const technologies = pgTable("technology", {

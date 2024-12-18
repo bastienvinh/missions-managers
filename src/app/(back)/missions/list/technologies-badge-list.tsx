@@ -6,7 +6,7 @@ export default function TechnnologiesBadgeList({ technologies, limit }: { techno
   return (
     <span className="flex gap-1 items-center">
       {technologies.slice(0, technologies.length < (limit ?? 4) ? technologies.length : (limit ?? 4)).map((techno, index) => (
-        <Badge className="h-[1rem] w-fit" variant="outline" key={index}>{techno}</Badge>
+        <Badge className="h-[1rem] w-fit text-nowrap" variant="outline" key={index}>{techno}</Badge>
       ))}
     </span>
   )

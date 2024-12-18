@@ -29,9 +29,9 @@ export const users = pgTable("users", {
   password: varchar("password").notNull(),
   salt: varchar("salt").notNull(),
   role: roleEnum('role').notNull(),
-  createdAt: date('createdat').default(sql`now()`),
-  updatedAt: date('updatedat'),
-  deletedAt: date('deletedat')
+  createdAt: date('created_at').default(sql`now()`),
+  updatedAt: date('updated_at'),
+  deletedAt: date('deleted_at')
 })
 
 export const accounts = pgTable(

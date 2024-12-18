@@ -39,9 +39,16 @@ export default function DetailMission({ mission }: { mission: MissionDTO }) {
           </DialogHeader>
           <ScrollArea>
             <div className="p-6 flex flex-col gap-10">
-              {!!mission.technologies.length && <div className="flex gap-2">
-                Technologies: {mission.technologies.map((techno, index) => (<Badge variant="outline" key={index}>{techno}</Badge>))}
-              </div>}
+              <div className="flex flex-col gap-3">
+                {!!mission.technologies.length && <div className="flex gap-2">
+                  Technologies: {mission.technologies.map((techno, index) => (<Badge variant="outline" key={index}>{techno}</Badge>))}
+                </div>}
+
+                <div className="flex gap-4">
+                  <span>Created At:</span>
+                  <span>{dayjs(mission.createdAt).format('YYYY-MM-DD')}</span>
+                </div>
+              </div>
 
               <div>
                 <h3 className="text-lg">Salary</h3>
@@ -50,22 +57,22 @@ export default function DetailMission({ mission }: { mission: MissionDTO }) {
 
               <div>
                 <h3 className="text-lg">Description</h3>
-                {mission.description}
+                {mission.description ?? 'None'}
               </div>
 
               <div>
                 <h3 className="text-lg">Benefits</h3>
-                {mission.benefits}
+                {mission.benefits ?? 'None'}
               </div>
 
               <div>
                 <h3 className="text-lg">Drawbacks</h3>
-                {mission.drawbacks}
+                {mission.drawbacks ?? 'None'}
               </div>
               
-              {mission.sourceUrl && <div>
-                <h3 className="text-lg">Source</h3>
-                <a href={mission.sourceUrl}>Link</a>
+              {mission.sourceUrl && <div className="flex gap-4 items-center">
+                <span>Source: </span>
+                <a className="underline" href={mission.sourceUrl}>Link</a>
               </div>}
             </div>
           </ScrollArea>

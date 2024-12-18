@@ -6,10 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
 import { Banknote, BriefcaseBusiness, Building2, MoreHorizontal, Pencil, SquareMenu, Trash2 } from "lucide-react"
-import TechnnologiesBadgeList from "./technologies-badge-list"
+// import TechnnologiesBadgeList from "./technologies-badge-list"
 import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
 import DetailMission from "./detail-mission"
+import { Badge } from "@/components/ui/badge"
 
 function descriptionFn(mission: MissionDTO) {
   return {
@@ -58,10 +59,11 @@ export function getColumnsDefinitions({ refresh }: { refresh: () => void }): Col
     },
     {
       accessorFn: descriptionFn,
-      cell({ getValue }) {
+      cell({ getValue, row }) {
         return (
           <div className="w-full flex gap-2 items-center">
-            <TechnnologiesBadgeList technologies={(getValue() as { technologies: string[] }).technologies} limit={3}  />
+            <Badge>{row.original.type}</Badge>
+            {/* <TechnnologiesBadgeList technologies={(getValue() as { technologies: string[] }).technologies} limit={3}  /> */}
             <span>{(getValue() as { description: string }).description}</span>
           </div>
         )

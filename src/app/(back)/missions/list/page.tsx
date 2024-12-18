@@ -107,7 +107,7 @@ export default function Page() {
     <div className="p-5">
       <div className="border rounded-lg p-10 grid grid-rows-[auto_auto_1fr] gap-5">
         <div>
-          <h1 className="text-2xl">Missions</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Missions</h1>
           <div>Here&apos;s a list of your missions</div>
         </div>
 

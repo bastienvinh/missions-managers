@@ -1,6 +1,6 @@
 'use server'
 
-import { sql, inArray, eq, or, like, and } from "drizzle-orm"
+import { sql, inArray, eq, or, like, and, lt } from "drizzle-orm"
 import db from "../schema"
 import { MissionAddUpdateModel, missions, missionsHasTechnologies, technologies, TechnologyModel } from "../schema/missions"
 import _ from "lodash"
@@ -8,6 +8,7 @@ import _ from "lodash"
 import { v4 as uuid } from 'uuid'
 import { MissionFilter } from "@/services/missions/type"
 import { PgSelect } from "drizzle-orm/pg-core"
+import dayjs from "dayjs"
 
 
 interface GetMissionParameters {
@@ -131,6 +132,8 @@ export async function getMissionsDao(options?: GetMissionParameters) {
   let finalQuery = withBaseFilterCriterias(query, options)
   finalQuery = withPage(finalQuery, options)
 
+  // TODO: with created_at Improve the result
+
   const result = await finalQuery.execute()
   const total = await finalCountQuery.execute().then(res => res[0].count)
 
@@ -138,6 +141,19 @@ export async function getMissionsDao(options?: GetMissionParameters) {
     result,
     total
   }
+}
+
+export async function getExpiredMissionsDao() {
+  return db.query.missions.findMany({
+    with: {
+      technologies: {
+        with: {
+          technology: true
+        }
+      }
+    },
+    where: (missions, { lt }) => lt(missions.expirationDate, new Date())
+  })
 }
 
 export async function destroyMissionsDao(ids: string[]) {
@@ -154,6 +170,35 @@ export async function destroyMissionsDao(ids: string[]) {
   } catch {
     throw new Error('impossible to delete into database, transaction failed')
   }
+}
+
+export async function truncateExpiredDao() {
+  try {
+    db.transaction(async tx => {
+      try {
+        // TODO: One day write a Optimized Stored Procedure
+        const expired = await tx.select().from(missions).where(lt(missions.expirationDate, dayjs().startOf('day').toDate()))
+        if (expired.length) {
+          await tx.delete(missionsHasTechnologies).where(inArray(missionsHasTechnologies.missionId, expired.map(m => m.id)))
+          await tx.delete(missions).where(inArray(missions.id, expired.map(m => m.id)))
+        }
+      } catch (error) {
+        tx.rollback()
+        throw error
+      }
+    })
+  } catch {
+    throw new Error('impossible to delete into database, transaction failed')
+  }
+}
+
+export async function getExpiredMissionTodayDao() {
+  const todayMorning = dayjs().startOf('day').toDate()
+  const todayNight = dayjs().endOf('day').toDate()
+
+  return db.query.missions.findMany({
+    where: (missions, { between }) => between(missions.expirationDate, todayMorning, todayNight)
+  })
 }
 
 export async function getCompaniesDao() {

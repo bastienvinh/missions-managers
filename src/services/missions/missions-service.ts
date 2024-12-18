@@ -22,8 +22,20 @@ export async function getMissionsService(options?: { page?: number, limit?: numb
   return missionsRepositories.getMissionsDao(options)
 }
 
+export async function getExpiredMisisonsService() {
+  return missionsRepositories.getExpiredMissionsDao()
+}
+
+export async function getExpiredTodayMissionService() {
+  return missionsRepositories.getExpiredMissionTodayDao()
+}
+
 export async function destroyMissionsService(ids: string[]) {
   return missionsRepositories.destroyMissionsDao(ids)
+}
+
+export async function destroyExpiredMissionsService() {
+  await missionsRepositories.truncateExpiredDao()
 }
 
 export async function getCompaniesService() {
