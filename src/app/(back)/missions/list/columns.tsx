@@ -3,7 +3,7 @@
 import { MissionDTO } from "@/app/dal/missions-dal"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
 import { Banknote, BriefcaseBusiness, Building2, MoreHorizontal, Pencil, SquareMenu, Trash2 } from "lucide-react"
 // import TechnnologiesBadgeList from "./technologies-badge-list"
@@ -11,12 +11,10 @@ import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
 import DetailMission from "./detail-mission"
 import { Badge } from "@/components/ui/badge"
+import TechnnologiesBadgeList from "./technologies-badge-list"
 
 function descriptionFn(mission: MissionDTO) {
-  return {
-    description: mission.description?.slice(0, 150) + '...',
-    technologies: mission.technologies
-  }
+  return mission.description?.slice(0, 150) + '...'
 }
 
 async function deleteMission(id: string) {
@@ -62,9 +60,9 @@ export function getColumnsDefinitions({ refresh }: { refresh: () => void }): Col
       cell({ getValue, row }) {
         return (
           <div className="w-full flex gap-2 items-center">
-            <Badge>{row.original.type}</Badge>
-            {/* <TechnnologiesBadgeList technologies={(getValue() as { technologies: string[] }).technologies} limit={3}  /> */}
-            <span>{(getValue() as { description: string }).description}</span>
+            <Badge className="h-6">{row.original.type}</Badge>
+            <TechnnologiesBadgeList technologies={row.original.technologies} />
+            <span>{getValue() as string}</span>
           </div>
         )
       },
@@ -91,6 +89,8 @@ export function getColumnsDefinitions({ refresh }: { refresh: () => void }): Col
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.sourceUrl ?? '')}>Copy Url</DropdownMenuItem>
+              <DropdownMenuSeparator></DropdownMenuSeparator>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
                 <DetailMission mission={row.original} />
