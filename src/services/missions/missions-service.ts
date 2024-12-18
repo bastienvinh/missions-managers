@@ -45,3 +45,7 @@ export async function destroyExpiredMissionsService() {
 export async function getCompaniesService() {
   return missionsRepositories.getCompaniesDao()
 }
+
+export async function getMissionByMaxSalaryService() {
+  return missionsRepositories.getMissionByMaxSalaryDao()
+}

@@ -2,6 +2,7 @@ import withAuth from "@/components/features/withAuth"
 import ExpiresCard from "./components/expires-card"
 import ExpiresTodayCard from "./components/expires-today-card"
 import MissionsNumbersCard from "./components/missions-numbers-card"
+import MaxSalaryCard from "./components/max-salary-card"
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +20,7 @@ function Page() {
           <MissionsNumbersCard />
           <ExpiresCard />
           <ExpiresTodayCard />
-          <MissionsNumbersCard />
+          <MaxSalaryCard />
         </div>
       </div>
     </div>

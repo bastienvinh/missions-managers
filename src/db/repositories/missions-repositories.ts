@@ -225,3 +225,12 @@ export async function getCompaniesDao() {
     .orderBy(missions.company)
     .then(res => res.filter(row => row.company !== null).map<string>(row => row.company ?? ''))
 }
+
+
+export async function getMissionByMaxSalaryDao() {
+  const max = await db.select({ max: sql<number>`MAX("salary")` }).from(missions).then(res => res[0].max)
+
+  return db.query.missions.findFirst({
+    where: (missions, {eq}) => eq(missions.salary, max)
+  })
+}
