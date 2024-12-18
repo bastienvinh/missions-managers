@@ -52,8 +52,8 @@ export async function addUpdateMission(
 
     const rawData = _.omit(parsedFields.data, 'url', 'source', 'level', 'expirationDate')
     await createorUpdateMission({ ...rawData, expirationDate: parsedFields.data.expirationDate ?? null, authorId: user?.id, likeLevel: parsedFields.data.level, sourceUrl: parsedFields.data.url, sourceId: parsedFields.data.source })
-    // TODO: Redirect to modify page instead
   } catch (error) {
+    console.log(error)
     return { success: false, message: `Something went wrong. ${(error as Error).name}`}
   }
   

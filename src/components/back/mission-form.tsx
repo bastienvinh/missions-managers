@@ -24,6 +24,7 @@ import dayjs from 'dayjs'
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
 import { UpdateMission } from "@/types/missions-types"
+import { redirect } from "next/navigation"
 
 export default function MissionsForm({mission}: { mission?: UpdateMission }) {
   const form = useForm<MissionSchemaType>({
@@ -35,7 +36,7 @@ export default function MissionsForm({mission}: { mission?: UpdateMission }) {
       description: mission?.description ?? '',
       level: mission?.likeLevel ?? 0,
       salary: mission?.salary ?? 0,
-      source: mission?.sourceUrl ?? '',
+      source: mission?.sourceId ?? '',
       technologies: mission?.technologies ?? [],
       title: mission?.title ?? `New Job # ${_.uniqueId()}`,
       url: mission?.sourceUrl ?? '',
@@ -55,11 +56,16 @@ export default function MissionsForm({mission}: { mission?: UpdateMission }) {
 
   useEffect(() => {
     if(!isPendingActionState && !actionState?.init && actionState?.success) {
-      toast.success('Mission Created')
+      toast.success(`Mission ${mission ? 'Modified' : 'Created'}`)
+
+      if (mission) {
+        redirect('/missions/list')
+      }
+
     } else if (!isPendingActionState && !actionState?.init && !actionState?.success) {
       toast.error('Failed Data Insertion')
     }
-  }, [actionState, isPendingActionState])
+  }, [actionState, isPendingActionState, mission])
 
   return (
     <Form {...form}>
@@ -237,7 +243,7 @@ export default function MissionsForm({mission}: { mission?: UpdateMission }) {
         )} />
 
         <div className="flex justify-end">
-          <Button disabled={isPending} type="submit" variant="outline">Save</Button>
+          <Button disabled={isPending} type="submit" variant="outline">{mission ? 'Modify' : 'Save'}</Button>
         </div>
       </form>
     </Form>

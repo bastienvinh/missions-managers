@@ -39,12 +39,15 @@ export async function getTechnologiesByListDao(list: string[]) {
   return result[0].result ?? [] as string[]
 }
 
-export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
+export async function createOrUpdateMissionDao(mission: MissionAddUpdateModel) {
   try {
     await db.transaction(async (tx) => {
       try {
+        console.log(mission.id)
         // We create new technologies they don't exists
-        const [model] = await tx.insert(missions).values([{ ..._.omit(mission, 'technologies', 'id'), id: mission.id ?? uuid() }]).returning()
+        const [model] = await tx.insert(missions).values([{ ..._.omit(mission, 'technologies', 'id'), id: mission.id ?? uuid() }])
+          .onConflictDoUpdate({ target: missions.id, set: { ..._.omit(mission, 'createdAt', 'updateAt') } })
+          .returning()
 
         const existedTechnologies: TechnologyModel[] = mission.technologies?.length ? await tx.execute(sql`SELECT "id", "name" FROM "technology" WHERE "name" IN (${sql.join(mission.technologies, sql`, `)})`) : []
         const newTechnologies = mission.technologies?.filter(t => !existedTechnologies.find(et => et.name.toLocaleLowerCase() === t.toLocaleLowerCase()))
@@ -52,12 +55,14 @@ export async function createorUpdateMissionDao(mission: MissionAddUpdateModel) {
         // associated technologies to mission
 
         if (newTechnologies?.length || existedTechnologies?.length) {
+          await tx.delete(missionsHasTechnologies).where(eq(missionsHasTechnologies.missionId, model.id))
           const technosInserted = newTechnologies?.length ? await tx.insert(technologies).values(newTechnologies?.map(techno => ({ name: techno })) ?? []).returning() : []
           await tx.insert(missionsHasTechnologies).values([ ...existedTechnologies, ...technosInserted].map(techno => ({ missionId: model.id, technologyId: techno.id })))
         }
 
       }
       catch (error) {
+        tx.rollback()
         throw new Error('Transaction Error')
       }
     })
@@ -141,6 +146,19 @@ export async function getMissionsDao(options?: GetMissionParameters) {
     result,
     total
   }
+}
+
+
+export async function getMissionDao(id: string) {
+  return db.select({
+    ..._.omit(missions, 'getSQL', '$inferInsert', '$inferSelect', '_', 'shouldOmitSQLParens', 'enableRLS'),
+    technologies: sql<string[]>`COALESCE(array_agg("name") FILTER (WHERE "name" IS NOT NULL), ARRAY[]::text[])`,
+  })
+    .from(missions)
+    .leftJoin(missionsHasTechnologies, eq(missions.id, missionsHasTechnologies.missionId))
+    .leftJoin(technologies, eq(missionsHasTechnologies.technologyId, technologies.id))
+    .groupBy(missions.id).where(eq(missions.id, id))
+    .then(result => result[0])
 }
 
 export async function getExpiredMissionsDao() {

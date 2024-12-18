@@ -15,11 +15,15 @@ export function getTechnologiesByNameService(term: string) {
 }
 
 export async function createorUpdateMission(mission: MissionAddUpdateModel) {
-  await missionsRepositories.createorUpdateMissionDao(mission)
+  await missionsRepositories.createOrUpdateMissionDao(mission)
 }
 
 export async function getMissionsService(options?: { page?: number, limit?: number, term?: string, filter?: MissionFilter }) {
   return missionsRepositories.getMissionsDao(options)
+}
+
+export async function getMissionService(id: string) {
+  return missionsRepositories.getMissionDao(id)
 }
 
 export async function getExpiredMisisonsService() {

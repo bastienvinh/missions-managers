@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
-import { Banknote, BriefcaseBusiness, Building2, MoreHorizontal, Pencil, SquareMenu, Trash2 } from "lucide-react"
+import { Banknote, BriefcaseBusiness, Building2, ClipboardCopy, MoreHorizontal, Pencil, SquareMenu, Trash2 } from "lucide-react"
 // import TechnnologiesBadgeList from "./technologies-badge-list"
 import { destroyMissionsService } from "@/services/missions/missions-service"
 import { toast } from "sonner"
 import DetailMission from "./detail-mission"
 import { Badge } from "@/components/ui/badge"
 import TechnnologiesBadgeList from "./technologies-badge-list"
+import { redirect } from "next/navigation"
 
 function descriptionFn(mission: MissionDTO) {
   return mission.description?.slice(0, 150) + '...'
@@ -89,14 +90,14 @@ export function getColumnsDefinitions({ refresh }: { refresh: () => void }): Col
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.sourceUrl ?? '')}>Copy Url</DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-1 cursor-pointer" onClick={() => navigator.clipboard.writeText(row.original.sourceUrl ?? '')}><ClipboardCopy /> Copy Url</DropdownMenuItem>
               <DropdownMenuSeparator></DropdownMenuSeparator>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
                 <DetailMission mission={row.original} />
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex gap-1"><Pencil /> Modify</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(row.original.id)} className="text-red-500 flex gap-1"><Trash2 /> Delete</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => redirect(`/missions/${row.original.id}/modify`)} className="flex gap-1 cursor-pointer"><Pencil /> Modify</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(row.original.id)} className="text-red-500 flex gap-1 cursor-pointer"><Trash2 /> Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
