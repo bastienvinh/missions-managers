@@ -22,6 +22,10 @@ function Page() {
           <ExpiresTodayCard />
           <MaxSalaryCard />
         </div>
+
+        <div className="flex flex-col gap-4">
+          {/* TODO: Improve this page with mor element */}
+        </div>
       </div>
     </div>
   )
